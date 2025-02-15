@@ -6,11 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import authImage from "@/public/static/images/authImg.png";
+import authImage from "@/public/static/images/authImgAlt.png";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export function SignupForm({
   className,
@@ -21,6 +22,12 @@ export function SignupForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+
+  const toggleVisibility = () => setIsVisible((prevState) => !prevState);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,18 +46,18 @@ export function SignupForm({
     }
     if (data) {
       setIsLoading(false);
-      router.push("/");
+      router.push(redirect || "/dashboard");
     }
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden dark:bg-jjBlack">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit} className="p-6 md:p-12">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-4xl font-medium tracking-tight">
                   Create an account
                 </h1>
                 <p className="text-balance text-muted-foreground">
@@ -89,20 +96,37 @@ export function SignupForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  id="password"
-                  type="password"
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pe-9"
+                    placeholder="Password"
+                    type={isVisible ? "text" : "password"}
+                  />
+                  <button
+                    className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                    type="button"
+                    onClick={toggleVisibility}
+                    aria-label={isVisible ? "Hide password" : "Show password"}
+                    aria-pressed={isVisible}
+                    aria-controls="password"
+                  >
+                    {isVisible ? (
+                      <EyeOff size={16} strokeWidth={2} aria-hidden="true" />
+                    ) : (
+                      <Eye size={16} strokeWidth={2} aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
               {error && <p className="text-red-500">{error}</p>}
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                <span className="relative z-10 bg-white px-2 text-black">
+                <span className="relative z-10 bg-white dark:bg-jjBlack px-2 text-black dark:text-white">
                   Or continue with
                 </span>
               </div>

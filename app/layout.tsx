@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/providers/providers";
-import AuthButton from "@/components/logout-button";
+import { SiteHeader } from "@/components/Home/site-header";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,11 +11,11 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "JourneyJolt",
+  title: "JourneyJolt — An AI Travel Agent",
   description: "The best way to plan your next adventure.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -28,8 +29,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthButton />
-          {children}
+          <NuqsAdapter>
+            <SiteHeader />
+            {/* <AuthButton /> */}
+            {children}
+          </NuqsAdapter>
         </Providers>
       </body>
     </html>

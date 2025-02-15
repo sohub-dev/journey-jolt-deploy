@@ -6,11 +6,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import authImage from "@/public/static/images/authImgNew.png";
+import authImage from "@/public/static/images/authImgAlt.png";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm({
@@ -26,6 +26,8 @@ export function LoginForm({
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,18 +44,18 @@ export function LoginForm({
     }
     if (data) {
       setIsLoading(false);
-      router.push("/");
+      router.push(redirect || "/");
     }
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden dark:bg-jjBlack">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit} className="p-6 md:p-12">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-4xl font-medium tracking-tight">
                   Welcome back
                 </h1>
                 <p className="text-balance text-muted-foreground">
@@ -84,6 +86,8 @@ export function LoginForm({
                 <div className="relative">
                   <Input
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="pe-9"
                     placeholder="Password"
                     type={isVisible ? "text" : "password"}
@@ -109,7 +113,7 @@ export function LoginForm({
               </Button>
               {error && <p className="text-red-500">{error}</p>}
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                <span className="relative z-10 bg-white px-2 text-black">
+                <span className="relative z-10 bg-white dark:bg-jjBlack px-2 text-black dark:text-white">
                   Or continue with
                 </span>
               </div>
@@ -127,6 +131,7 @@ export function LoginForm({
                   onClick={async () => {
                     const data = await authClient.signIn.social({
                       provider: "google",
+                      callbackURL: redirect || "/dashboard",
                     });
                     console.log(data);
                   }}
