@@ -1,0 +1,42 @@
+services:
+  # nextapp:
+  #   container_name: nextapp
+  #   image: nextapp:1.0.0
+  #   build:
+  #     context: ./src
+  #     dockerfile: next.dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NEXT_PUBLIC_APP_URL=http://localhost:3000
+  #     - BETTER_AUTH_URL=http://localhost:3000
+  #     - BETTER_AUTH_SECRET=your_secret_key
+  #     - GOOGLE_CLIENT_ID=your_client_id
+  #     - GOOGLE_CLIENT_SECRET=your_client_secret
+  #     - GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/callback/google
+
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - app_network
+  db:
+    container_name: db
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: journeyjolt
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  pgdata: {}
