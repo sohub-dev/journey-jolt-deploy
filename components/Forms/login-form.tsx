@@ -6,11 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import authImage from "@/public/static/images/authImg.png";
+import authImage from "@/public/static/images/authImgNew.png";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm({
   className,
@@ -20,6 +21,10 @@ export function LoginForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const toggleVisibility = () => setIsVisible((prevState) => !prevState);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,13 +81,28 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  id="password"
-                  type="password"
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    className="pe-9"
+                    placeholder="Password"
+                    type={isVisible ? "text" : "password"}
+                  />
+                  <button
+                    className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                    type="button"
+                    onClick={toggleVisibility}
+                    aria-label={isVisible ? "Hide password" : "Show password"}
+                    aria-pressed={isVisible}
+                    aria-controls="password"
+                  >
+                    {isVisible ? (
+                      <EyeOff size={16} strokeWidth={2} aria-hidden="true" />
+                    ) : (
+                      <Eye size={16} strokeWidth={2} aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Logging in..." : "Login"}
