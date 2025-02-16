@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/providers/providers";
 import { SiteHeader } from "@/components/Home/site-header";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NuqsAdapter>
+            <Toaster richColors />
             <SiteHeader />
             {/* <AuthButton /> */}
             {children}

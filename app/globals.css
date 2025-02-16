@@ -26,6 +26,33 @@
   }
 }
 
+.skeleton {
+  * {
+    pointer-events: none !important;
+  }
+
+  *[class^="text"] {
+    color: transparent !important;
+    @apply rounded-sm bg-black/20 dark:bg-white/20 select-none animate-pulse;
+  }
+
+  *[class^="no-skeleton"] {
+    opacity: 0 !important;
+  }
+
+  input {
+    opacity: 0 !important;
+  }
+
+  .skeleton-bg {
+    @apply bg-black/10 dark:bg-white/10;
+  }
+
+  .skeleton-div {
+    @apply bg-black/20 dark:bg-white/20 animate-pulse;
+  }
+}
+
 body {
   @apply bg-white dark:bg-jjBlack;
 }

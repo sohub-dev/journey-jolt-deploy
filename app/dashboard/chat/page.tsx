@@ -1,68 +1,145 @@
-"use client";
+import { generateUUID } from "@/lib/utils";
+import { Chat } from "@/components/Chat";
 
-import { useChat } from "@ai-sdk/react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+const UIFlag = true;
 
-export default function ChatPage() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
-
+export default async function ChatPage() {
+  const id = generateUUID();
+  const initialMessagesTest = [
+    {
+      id: generateUUID(),
+      role: "assistant",
+      content: "Here are some available flights:",
+      toolInvocations: [
+        {
+          toolName: "searchFlights",
+          toolCallId: generateUUID(),
+          state: "result",
+        },
+      ],
+    },
+    {
+      id: generateUUID(),
+      role: "assistant",
+      content: "Here are some available seats:",
+      toolInvocations: [
+        {
+          toolName: "selectSeats",
+          toolCallId: generateUUID(),
+          state: "result",
+          result: {
+            seats: [
+              [
+                { seatNumber: "1A", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "1B", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "1C", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "1D", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "1E", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "1F", priceInUSD: 150, isAvailable: false },
+              ],
+              [
+                { seatNumber: "2A", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "2B", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "2C", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "2D", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "2E", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "2F", priceInUSD: 150, isAvailable: false },
+              ],
+              [
+                { seatNumber: "3A", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "3B", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "3C", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "3D", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "3E", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "3F", priceInUSD: 150, isAvailable: false },
+              ],
+              [
+                { seatNumber: "4A", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "4B", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "4C", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "4D", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "4E", priceInUSD: 150, isAvailable: true },
+                { seatNumber: "4F", priceInUSD: 150, isAvailable: true },
+              ],
+              [
+                { seatNumber: "5A", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "5B", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "5C", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "5D", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "5E", priceInUSD: 150, isAvailable: false },
+                { seatNumber: "5F", priceInUSD: 150, isAvailable: false },
+              ],
+            ],
+          },
+        },
+      ],
+    },
+    {
+      id: generateUUID(),
+      role: "assistant",
+      content: "Here is the reservation:",
+      toolInvocations: [
+        {
+          toolName: "displayReservation",
+          toolCallId: generateUUID(),
+          state: "result",
+          result: {
+            offerId: "offer_123",
+            seats: ["4C"],
+            flightNumber: "EK413",
+            departure: {
+              cityName: "Sydney",
+              airportCode: "SYD",
+              timestamp: "2023-11-01T06:00:00",
+              gate: "A12",
+              terminal: "1",
+            },
+            arrival: {
+              cityName: "Chennai",
+              airportCode: "MAA",
+              timestamp: "2023-11-01T18:45:00",
+              gate: "B5",
+              terminal: "3",
+            },
+            passengerName: "John Doe",
+            totalPriceInEuros: 1200,
+          },
+        },
+      ],
+    },
+    {
+      id: generateUUID(),
+      role: "assistant",
+      content: "Here is the payment:",
+      toolInvocations: [
+        {
+          toolName: "authorizePayment",
+          toolCallId: generateUUID(),
+          state: "result",
+          result: {
+            reservationId: "reservation_test1",
+          },
+        },
+      ],
+    },
+    {
+      id: generateUUID(),
+      role: "assistant",
+      content: "Here is the boarding pass:",
+      toolInvocations: [
+        {
+          toolName: "displayBoardingPass",
+          toolCallId: generateUUID(),
+          state: "result",
+        },
+      ],
+    },
+  ];
   return (
-    <div className="container mx-auto p-4 h-[calc(100vh-4rem)]">
-      <Card className="h-full flex flex-col">
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex items-start gap-4 text-sm",
-                  message.role === "assistant" ? "flex-row" : "flex-row-reverse"
-                )}
-              >
-                <Avatar className="mt-1">
-                  <div
-                    className={cn(
-                      "w-full h-full flex items-center justify-center",
-                      message.role === "assistant"
-                        ? "bg-primary"
-                        : "bg-secondary"
-                    )}
-                  >
-                    {message.role === "assistant" ? "🤖" : "👤"}
-                  </div>
-                </Avatar>
-                <div
-                  className={cn(
-                    "rounded-lg px-4 py-2 max-w-[80%]",
-                    message.role === "assistant"
-                      ? "bg-muted"
-                      : "bg-primary text-primary-foreground"
-                  )}
-                >
-                  {message.content}
-                </div>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
-
-        <form onSubmit={handleSubmit} className="p-4 border-t">
-          <div className="flex gap-4">
-            <Input
-              value={input}
-              onChange={handleInputChange}
-              placeholder="Type your message..."
-              className="flex-1"
-            />
-            <Button type="submit">Send</Button>
-          </div>
-        </form>
-      </Card>
-    </div>
+    <Chat
+      key={id}
+      id={id}
+      initialMessages={UIFlag ? initialMessagesTest : []}
+    />
   );
 }
