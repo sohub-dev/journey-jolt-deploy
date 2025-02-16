@@ -12,6 +12,7 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import { env } from "@/lib/env";
 
 export function SignupForm({
   className,
@@ -23,8 +24,6 @@ export function SignupForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect");
 
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
@@ -46,7 +45,7 @@ export function SignupForm({
     }
     if (data) {
       setIsLoading(false);
-      router.push(redirect || "/dashboard");
+      router.push("/dashboard");
     }
   };
 
@@ -144,6 +143,7 @@ export function SignupForm({
                   onClick={async () => {
                     const data = await authClient.signIn.social({
                       provider: "google",
+                      callbackURL: env.NEXT_PUBLIC_APP_URL + "/dashboard",
                     });
                     console.log(data);
                   }}
