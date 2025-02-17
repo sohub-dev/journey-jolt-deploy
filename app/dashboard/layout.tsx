@@ -28,8 +28,8 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="relative h-svh">
-        <header className="absolute top-0 w-full z-[100] bg-white dark:bg-jjBlack flex h-16 shrink-0 border-b-[1px] border-black/[0.1] dark:border-white/[0.1] items-center justify-between pr-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-14">
+      <SidebarInset className="relative h-svh p-3 bg-[#f5f5f5] dark:bg-[#17191c]">
+        <header className="absolute top-3 rounded-t-xl w-[calc(100%-1.5rem)] z-[100] bg-white dark:bg-jjBlack flex h-16 shrink-0 border-b-[1px] border-black/[0.1] dark:border-white/[0.1] items-center justify-between pr-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-14">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -37,7 +37,7 @@ export default async function DashboardLayout({
           </div>
           <ThemeToggle className="" />
         </header>
-        <div className="h-full flex flex-1 flex-col gap-4 p-4 z-0 relative pt-20">
+        <div className="w-full h-full flex flex-1 flex-col gap-4 p-4 z-0 relative pt-20 bg-white dark:bg-jjBlack rounded-xl">
           {children}
         </div>
       </SidebarInset>

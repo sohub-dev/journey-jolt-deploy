@@ -27,50 +27,6 @@ export default async function ChatPage() {
           toolName: "selectSeats",
           toolCallId: generateUUID(),
           state: "result",
-          result: {
-            seats: [
-              [
-                { seatNumber: "1A", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "1B", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "1C", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "1D", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "1E", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "1F", priceInUSD: 150, isAvailable: false },
-              ],
-              [
-                { seatNumber: "2A", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "2B", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "2C", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "2D", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "2E", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "2F", priceInUSD: 150, isAvailable: false },
-              ],
-              [
-                { seatNumber: "3A", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "3B", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "3C", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "3D", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "3E", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "3F", priceInUSD: 150, isAvailable: false },
-              ],
-              [
-                { seatNumber: "4A", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "4B", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "4C", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "4D", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "4E", priceInUSD: 150, isAvailable: true },
-                { seatNumber: "4F", priceInUSD: 150, isAvailable: true },
-              ],
-              [
-                { seatNumber: "5A", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "5B", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "5C", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "5D", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "5E", priceInUSD: 150, isAvailable: false },
-                { seatNumber: "5F", priceInUSD: 150, isAvailable: false },
-              ],
-            ],
-          },
         },
       ],
     },
@@ -151,6 +107,7 @@ export default async function ChatPage() {
     <Chat
       key={id}
       id={id}
+      //@ts-expect-error
       initialMessages={UIFlag ? initialMessagesTest : []}
     />
   );

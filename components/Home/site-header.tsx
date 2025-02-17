@@ -137,12 +137,15 @@ export function SiteHeader() {
           </div>
         )}
         {isLoggedIn && (
-          <Button
-            asChild
-            className="text-base tracking-tight py-4 px-6 bg-jjBlue hover:bg-jjBlue/80 font-normal"
-          >
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
+          <div className="flex items-center space-x-4">
+            <Button
+              asChild
+              className="text-base tracking-tight py-4 px-6 bg-jjBlue hover:bg-jjBlue/80 font-normal"
+            >
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
+            <ThemeToggle />
+          </div>
         )}
       </div>
     </motion.header>
