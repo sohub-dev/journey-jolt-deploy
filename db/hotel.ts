@@ -1,15 +1,9 @@
-import { eq } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { hotelRooms, bookingHotels } from "./tempMockData/mockHotelData";
 import {
-  booking,
   hotelRoom,
   bookingHotel,
-  passenger,
-  passengerRoom,
-  user,
 } from "./schema";
-import { uuid } from "drizzle-orm/pg-core";
 
 async function saveHotelBooking(
   db: PostgresJsDatabase,
@@ -27,7 +21,6 @@ async function saveHotelBooking(
 
     //based on mock data found in coressponfing folder
     const newBookingHotelRecord: bookingHotelInsertType = {
-      id: bookingHotels[hotelNumber].id,
       bookingId: bookingHotels[hotelNumber].bookingId,
       hotelRoomId: bookingHotels[hotelNumber].hotelRoomId,
       name: bookingHotels[hotelNumber].name,
@@ -40,17 +33,12 @@ async function saveHotelBooking(
       numberOfRooms: bookingHotels[hotelNumber].numberOfRooms,
       pricePerNight: bookingHotels[hotelNumber].pricePerNight,
       priceCurrency: bookingHotels[hotelNumber].priceCurrency,
-      createdAt: bookingHotels[hotelNumber].createdAt,
-      updatedAt: bookingHotels[hotelNumber].updatedAt,
     };
 
     const newHotelRoomRecord: hotelRoomInsertType = {
-      id: hotelRooms[roomNumber].id,
       roomType: hotelRooms[roomNumber].roomType,
       description: hotelRooms[roomNumber].description,
       maxOccupancy: hotelRooms[roomNumber].maxOccupancy,
-      createdAt: hotelRooms[roomNumber].createdAt,
-      updatedAt: hotelRooms[roomNumber].updatedAt,
     };
 
     const bookingHotelResult = await db

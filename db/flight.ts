@@ -1,12 +1,9 @@
 import { eq } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import {
-  booking,
   flight,
   bookingFlight,
-  passenger,
   passengerFlight,
-  user,
 } from "./schema";
 import {
   FlightBookingResponse,
@@ -37,18 +34,14 @@ async function saveFlightBooking(
     const bookingFlightId = uuid().toString();
 
     const newBookingFlight: bookingFlightInsertType = {
-      id: bookingFlightId,
       bookingId,
       flightId: jsonFlightBookingData.data.id,
       cabinClass: jsonPassengerData.cabin_class ?? "Economy",
       priceAmount: jsonFlightBookingData.data.total_amount,
       priceCurrency: jsonFlightBookingData.data.total_currency,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     const newFlight: flightInsertType = {
-      id: uuid().toString(),
       flightNumber: jsonFlightBookingData.data.booking_reference,
       airline: jsonFlightBookingData.data.owner.toString(),
       departureAirport: jsonSegmentData.origin.toString(),
@@ -56,12 +49,9 @@ async function saveFlightBooking(
       departureTime: jsonSegmentData.departing_at,
       arrivalTime: jsonSegmentData.arriving_at,
       aircraftType: jsonAircraftData.name,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     const newPassengerFlight: passengerFlightInsertType = {
-      id: uuid().toString(),
       bookingFlightId: bookingFlightId,
       passengerId: jsonPassengerData.passenger_id,
       seatNumber: jsonPassengerData.seat?.name ?? "N/A", //TODO: chekc later for seat allocation
@@ -69,8 +59,6 @@ async function saveFlightBooking(
         jsonPassengerData.baggages
           ?.reduce((sum, bag) => sum + bag.quantity, 0)
           .toString() ?? "0",
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     const bookingFlightResult = await db
