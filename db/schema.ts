@@ -18,6 +18,7 @@ export const user = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
+  onboarding_complete: boolean("onboarding_complete").notNull(),
 });
 
 export const session = pgTable("session", {
@@ -78,6 +79,8 @@ export const paymentInfo = pgTable("payment_info", {
   cardType: varchar("card_type", { length: 50 }),
   // The last 4 digits of the card number (used for display/reference)
   last4: varchar("last4", { length: 4 }),
+  //Magic word for the payment info
+  magicWord: text("magic_word").notNull(),
   // Timestamp when the record was created
   createdAt: timestamp("created_at", {
     mode: "string",

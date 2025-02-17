@@ -19,10 +19,10 @@ export function SiteHeader() {
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   const isDashboardRoute = pathname?.includes("dashboard");
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const isLoggedIn = !!session;
 
-  if (isDashboardRoute) {
+  if (isDashboardRoute || isPending) {
     return null;
   }
 

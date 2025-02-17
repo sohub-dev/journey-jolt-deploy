@@ -16,4 +16,13 @@ export const auth = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
+  user: {
+    additionalFields: {
+      onboarding_complete: {
+        type: "boolean",
+        default: false,
+        required: true,
+      },
+    },
+  },
 });

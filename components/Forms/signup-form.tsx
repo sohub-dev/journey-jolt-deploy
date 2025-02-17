@@ -45,7 +45,7 @@ export function SignupForm({
     }
     if (data) {
       setIsLoading(false);
-      router.push("/dashboard");
+      router.push("/onboarding");
     }
   };
 
@@ -143,7 +143,7 @@ export function SignupForm({
                   onClick={async () => {
                     const data = await authClient.signIn.social({
                       provider: "google",
-                      callbackURL: env.NEXT_PUBLIC_APP_URL + "/dashboard",
+                      callbackURL: env.NEXT_PUBLIC_APP_URL + "/onboarding",
                     });
                     console.log(data);
                   }}

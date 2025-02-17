@@ -15,7 +15,12 @@ import { cn } from "@/lib/utils";
 import { WarpBackground } from "@/components/warp-background";
 import { motion } from "framer-motion";
 import OnboardingSuccess from "./components/onboarding-success";
+import { db } from "@/db";
+import { savePassengerInfo } from "@/db/passenger";
+import { savePaymentInfo } from "@/db/payment";
+import { useSession } from "@/lib/auth-client";
 export default function OnboardingPage() {
+  const { data: session, isPending } = useSession();
   const router = useRouter();
   const [step, setStep] = useState(1);
 
@@ -28,8 +33,8 @@ export default function OnboardingPage() {
           lastName: "",
           nationality: "",
           passportNumber: "",
-          passportExpiry: new Date(),
-          dateOfBirth: new Date(),
+          passportExpiry: "",
+          dateOfBirth: "",
         },
       ],
       paymentInfo: {
@@ -61,9 +66,22 @@ export default function OnboardingPage() {
 
     // Final submission
     const isValid = await form.trigger();
-    if (isValid) {
+    if (isValid && !isPending && !!session) {
       try {
         const data = form.getValues();
+        const passengers = data.passengers.map((passenger) => ({
+          ...passenger,
+          userId: session.user.id,
+        }));
+        passengers.forEach(async (passenger) => {
+          await savePassengerInfo(passenger);
+        });
+        const paymentInfo = {
+          ...data.paymentInfo,
+          userId: session.user.id,
+          magicWord: data.magicWord,
+        };
+        await savePaymentInfo(paymentInfo);
         console.log("Form submitted:", data);
         setStep(4);
         // router.push("/dashboard");
@@ -125,10 +143,10 @@ export default function OnboardingPage() {
                       append({
                         firstName: "",
                         lastName: "",
-                        dateOfBirth: new Date(),
+                        dateOfBirth: "",
                         nationality: "",
                         passportNumber: "",
-                        passportExpiry: new Date(),
+                        passportExpiry: "",
                       })
                     }
                     remove={remove}
