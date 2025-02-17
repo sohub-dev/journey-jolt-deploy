@@ -14,7 +14,6 @@ import { FlightStatus } from "@/components/Chat/flights/flight-status";
 import { ListFlights } from "@/components/Chat/flights/list-flights";
 import { SelectSeats } from "@/components/Chat/flights/select-seats";
 import { VerifyPayment } from "@/components/Chat/flights/verify-payment";
-import { Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ListAccommodations } from "./accommodations/list-accommodations";
 
@@ -51,12 +50,6 @@ export const Message = ({
             "w-fit text-right bg-jjBlack/[0.04] dark:bg-white/[0.04] rounded-3xl px-6 py-4"
         )}
       >
-        {content && typeof content === "string" && (
-          <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-1">
-            <Markdown>{content}</Markdown>
-          </div>
-        )}
-
         {toolInvocations && (
           <div className="flex flex-col gap-4">
             {toolInvocations.map((toolInvocation) => {
@@ -118,12 +111,9 @@ export const Message = ({
             })}
           </div>
         )}
-
-        {attachments && (
-          <div className="flex flex-row gap-2">
-            {attachments.map((attachment) => (
-              <PreviewAttachment key={attachment.url} attachment={attachment} />
-            ))}
+        {content && typeof content === "string" && (
+          <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-1">
+            <Markdown>{content}</Markdown>
           </div>
         )}
       </div>

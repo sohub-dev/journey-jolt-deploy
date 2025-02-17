@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Duffel } from "@duffel/api";
 import { env } from "@/lib/env";
 import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 
 const duffel = new Duffel({
   token: env.DUFFEL_TOKEN,
@@ -220,7 +220,7 @@ export async function generateSampleSeatSelection({
   flightNumber: string;
 }) {
   const { object: rows } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: google("gemini-2.0-flash-001"),
     prompt: `Simulate available seats for flight number ${flightNumber}, 6 seats on each row and 5 rows in total, adjust pricing based on location of seat, randomize availability of seats`,
     output: "array",
     schema: z.array(
@@ -275,7 +275,7 @@ export async function generateAccommodationSearchResults({
   checkOutDate: string;
 }) {
   const { object: accommodations } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: google("gemini-2.0-flash-001"),
     prompt: `Generate a list of 3-7 accommodations in ${destinationCity}, ${destinationCountry} for the dates ${checkInDate} to ${checkOutDate} follow the schema CAREFULLY`,
     output: "array",
     schema: z.object({
@@ -313,6 +313,17 @@ export async function generateAccommodationSearchResults({
   });
 
   return { accommodations };
+}
+
+export async function getOfferById({ id }: { id: string }) {
+  const offer = localStorage.getItem(id);
+  if (!offer) {
+    return {
+      hasCompletedPayment: false,
+    };
+  }
+  const parsed = JSON.parse(offer);
+  return parsed;
 }
 
 // type OutputAccommodation = {
