@@ -46,59 +46,6 @@ const flightResultSchema = z.object({
   priceInEuros: z.number().describe("Price in euros"),
 });
 
-// const SAMPLE = {
-//   flights: [
-//     {
-//       id: "result_1",
-//       departure: {
-//         cityName: "San Francisco",
-//         airportCode: "SFO",
-//         timestamp: "2024-05-19T18:00:00Z",
-//       },
-//       arrival: {
-//         cityName: "Rome",
-//         airportCode: "FCO",
-//         timestamp: "2024-05-20T14:30:00Z",
-//       },
-//       airlines: ["United Airlines", "Lufthansa"],
-//       priceInUSD: 1200.5,
-//       numberOfStops: 1,
-//     },
-//     {
-//       id: "result_2",
-//       departure: {
-//         cityName: "San Francisco",
-//         airportCode: "SFO",
-//         timestamp: "2024-05-19T17:30:00Z",
-//       },
-//       arrival: {
-//         cityName: "Rome",
-//         airportCode: "FCO",
-//         timestamp: "2024-05-20T15:00:00Z",
-//       },
-//       airlines: ["British Airways"],
-//       priceInUSD: 1350,
-//       numberOfStops: 0,
-//     },
-//     {
-//       id: "result_3",
-//       departure: {
-//         cityName: "San Francisco",
-//         airportCode: "SFO",
-//         timestamp: "2024-05-19T19:15:00Z",
-//       },
-//       arrival: {
-//         cityName: "Rome",
-//         airportCode: "FCO",
-//         timestamp: "2024-05-20T16:45:00Z",
-//       },
-//       airlines: ["Delta Air Lines", "Air France"],
-//       priceInUSD: 1150.75,
-//       numberOfStops: 1,
-//     },
-//   ],
-// };
-
 export async function generateFlightSearchResults({
   origin,
   destination,
@@ -274,7 +221,7 @@ export async function generateSampleSeatSelection({
 }) {
   const { object: rows } = await generateObject({
     model: openai("gpt-4o-mini"),
-    prompt: `Simulate available seats for flight number ${flightNumber}, 6 seats on each row and 5 rows in total, adjust pricing based on location of seat`,
+    prompt: `Simulate available seats for flight number ${flightNumber}, 6 seats on each row and 5 rows in total, adjust pricing based on location of seat, randomize availability of seats`,
     output: "array",
     schema: z.array(
       z.object({
@@ -291,3 +238,147 @@ export async function generateSampleSeatSelection({
 
   return { seats: rows };
 }
+
+const accommodationSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  location: z.object({
+    city: z.string(),
+    area: z.string(),
+    distance: z.string(),
+  }),
+  type: z.enum(["Hotel", "Apartment", "Boutique Hotel"]),
+  amenities: z.array(
+    z.enum([
+      "wifi",
+      "parking",
+      "spa",
+      "kitchen",
+      "restaurant",
+      "pool",
+      "gym",
+      "breakfast",
+    ])
+  ),
+  rating: z.number().min(0).max(5),
+});
+
+export async function generateAccommodationSearchResults({
+  destinationCountry,
+  destinationCity,
+  checkInDate,
+  checkOutDate,
+}: {
+  destinationCountry: string;
+  destinationCity: string;
+  checkInDate: string;
+  checkOutDate: string;
+}) {
+  const { object: accommodations } = await generateObject({
+    model: openai("gpt-4o-mini"),
+    prompt: `Generate a list of 3-7 accommodations in ${destinationCity}, ${destinationCountry} for the dates ${checkInDate} to ${checkOutDate} follow the schema CAREFULLY`,
+    output: "array",
+    schema: z.object({
+      id: z.string().describe("Unique identifier for the accommodation"),
+      name: z.string().describe("Name of the accommodation"),
+      location: z.object({
+        city: z.string().describe("City of the accommodation"),
+        area: z.string().describe("Area of the accommodation"),
+        distance: z
+          .string()
+          .describe(
+            "Distance from a significant landmark and the landmarks name"
+          ),
+      }),
+      type: z
+        .enum(["Hotel", "Apartment", "Boutique Hotel"])
+        .describe("Type of the accommodation"),
+      amenities: z.array(
+        z
+          .enum([
+            "wifi",
+            "parking",
+            "spa",
+            "kitchen",
+            "pool",
+            "gym",
+            "breakfast",
+          ])
+          .describe("Amenities of the accommodation")
+      ),
+      rating: z.number().min(0).max(5).describe("Rating of the accommodation"),
+      pricePerNight: z.number().positive().describe("Price per night in Euros"),
+      currency: z.enum(["EUR"]).describe("Currency of the price"),
+    }),
+  });
+
+  return { accommodations };
+}
+
+// type OutputAccommodation = {
+//   id: string;
+//   name: string;
+//   location: {
+//     city: string;
+//     area: string;
+//     distance: string;
+//   };
+//   type: "Hotel" | "Apartment" | "Boutique Hotel";
+//   amenities: Array<"wifi" | "parking" | "spa" | "kitchen" | "restaurant">;
+//   rating: number;
+//   pricePerNight: number;
+//   currency: "EUR";
+// };
+
+// function transformAccommodationData(input: any): OutputAccommodation {
+//   const accommodation = input.data.results[0].accommodation;
+
+//   // Map amenities to the expected format
+//   const amenityMapping: {
+//     [key: string]: "wifi" | "parking" | "spa" | "kitchen" | "restaurant";
+//   } = {
+//     parking: "parking",
+//     // Add more mappings as needed
+//   };
+
+//   const transformedAmenities = accommodation.amenities
+//     .map((a: any) => amenityMapping[a.type])
+//     .filter(
+//       (a: any): a is "wifi" | "parking" | "spa" | "kitchen" | "restaurant" =>
+//         a !== undefined
+//     );
+
+//   // Calculate price per night
+//   const totalNights = calculateNights(
+//     input.data.results[0].check_in_date,
+//     input.data.results[0].check_out_date
+//   );
+//   const pricePerNight =
+//     parseFloat(input.data.results[0].cheapest_rate_total_amount) / totalNights;
+
+//   // Transform the rating to 5-star scale
+//   const normalizedRating = accommodation.rating / 2;
+
+//   return {
+//     id: accommodation.id,
+//     name: accommodation.name,
+//     location: {
+//       city: accommodation.location.address.city_name,
+//       area: accommodation.location.address.region,
+//       distance: "0km", // Default value as it's not provided in input
+//     },
+//     type: "Hotel", // Default value as it's not provided in input
+//     amenities: transformedAmenities,
+//     rating: normalizedRating,
+//     pricePerNight,
+//     currency: "EUR", // Fixed value as per schema
+//   };
+// }
+
+// function calculateNights(checkIn: string, checkOut: string): number {
+//   const checkInDate = new Date(checkIn);
+//   const checkOutDate = new Date(checkOut);
+//   const diffTime = Math.abs(checkOutDate.getTime() - checkInDate.getTime());
+//   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+//   return diffDays;
+// }

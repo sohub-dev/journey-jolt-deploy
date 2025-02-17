@@ -10,6 +10,7 @@ import { toast } from "sonner";
 // import { CheckCircle, InfoIcon } from "../custom/icons";
 import { Input } from "@/components/ui/input";
 import { CheckCircle, Info } from "lucide-react";
+import { useChat } from "@ai-sdk/react";
 
 const SAMPLE = {
   hasCompletedPayment: false,
@@ -17,50 +18,31 @@ const SAMPLE = {
 };
 
 export function AuthorizePayment({
-  intent = { reservationId: "sample-uuid" },
+  chatId,
+  intent = { offerId: "sample-id" },
 }: {
-  intent?: { reservationId: string };
+  chatId: string;
+  intent?: { offerId: string };
 }) {
-  // const { data: reservation, mutate } = useSWR(
-  //   `/api/reservation?id=${intent.reservationId}`,
-  //   fetcher
-  // );
+  const { append } = useChat({
+    id: chatId,
+    body: { id: chatId },
+    maxSteps: 5,
+  });
   const [reservation, setReservation] = useState(SAMPLE);
 
   const [input, setInput] = useState("");
 
   const handleAuthorize = async (magicWord: string) => {
-    // try {
-    //   const response = await fetch(
-    //     `/api/reservation?id=${intent.reservationId}`,
-    //     {
-    //       method: "PATCH",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({ magicWord }),
-    //     }
-    //   );
-
-    //   if (!response.ok) {
-    //     const errorText = await response.text();
-    //     throw new Error(errorText || response.statusText);
-    //   }
-
-    //   const updatedReservation = await response.json();
-    //   mutate(updatedReservation);
-    // } catch (error) {
-    //   if (error instanceof Error) {
-    //     toast.error(error.message);
-    //   } else {
-    //     toast.error("An unknown error occurred");
-    //   }
-    // }
     new Promise((resolve) => setTimeout(resolve, 1000));
     if (magicWord === "vercel") {
       setReservation({
         hasCompletedPayment: true,
         createdAt: new Date(),
+      });
+      append({
+        role: "assistant",
+        content: "Payment authorized",
       });
     } else {
       toast.error("Invalid magic word");

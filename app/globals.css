@@ -26,6 +26,20 @@
   }
 }
 
+/*Custom scrollbar*/
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-white dark:bg-jjBlack;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-jjBlack dark:bg-white rounded-full;
+}
+
 .skeleton {
   * {
     pointer-events: none !important;
@@ -49,7 +63,11 @@
   }
 
   .skeleton-div {
-    @apply bg-black/20 dark:bg-white/20 animate-pulse;
+    @apply bg-black/20 dark:bg-white/20 animate-pulse rounded-sm;
+
+    * {
+      opacity: 0 !important;
+    }
   }
 }
 

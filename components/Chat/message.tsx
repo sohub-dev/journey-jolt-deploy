@@ -16,6 +16,7 @@ import { SelectSeats } from "@/components/Chat/flights/select-seats";
 import { VerifyPayment } from "@/components/Chat/flights/verify-payment";
 import { Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ListAccommodations } from "./accommodations/list-accommodations";
 
 export const Message = ({
   chatId,
@@ -79,11 +80,13 @@ export const Message = ({
                         <DisplayReservation reservation={result} />
                       )
                     ) : toolName === "authorizePayment" ? (
-                      <AuthorizePayment intent={result} />
+                      <AuthorizePayment chatId={chatId} intent={result} />
                     ) : toolName === "displayBoardingPass" ? (
                       <DisplayBoardingPass boardingPass={result} />
                     ) : toolName === "verifyPayment" ? (
                       <VerifyPayment result={result} />
+                    ) : toolName === "searchAccommodations" ? (
+                      <ListAccommodations chatId={chatId} results={result} />
                     ) : (
                       <div>{JSON.stringify(result, null, 2)}</div>
                     )}
@@ -103,9 +106,11 @@ export const Message = ({
                     ) : toolName === "displayReservation" ? (
                       <DisplayReservation />
                     ) : toolName === "authorizePayment" ? (
-                      <AuthorizePayment />
+                      <AuthorizePayment chatId={chatId} />
                     ) : toolName === "displayBoardingPass" ? (
                       <DisplayBoardingPass />
+                    ) : toolName === "searchAccommodations" ? (
+                      <ListAccommodations chatId={chatId} />
                     ) : null}
                   </div>
                 );

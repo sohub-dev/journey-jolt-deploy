@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
+import { ThemeToggle } from "../theme-switcher";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -132,6 +133,7 @@ export function SiteHeader() {
             >
               <Link href="/signup">Get Started</Link>
             </Button>
+            <ThemeToggle />
           </div>
         )}
         {isLoggedIn && (

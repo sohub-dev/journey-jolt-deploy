@@ -1,7 +1,7 @@
 import { generateUUID } from "@/lib/utils";
 import { Chat } from "@/components/Chat";
 
-const UIFlag = true;
+const UIFlag = false;
 
 export default async function ChatPage() {
   const id = generateUUID();
@@ -129,6 +129,18 @@ export default async function ChatPage() {
       toolInvocations: [
         {
           toolName: "displayBoardingPass",
+          toolCallId: generateUUID(),
+          state: "result",
+        },
+      ],
+    },
+    {
+      id: generateUUID(),
+      role: "assistant",
+      content: "Here are some available accommodations:",
+      toolInvocations: [
+        {
+          toolName: "searchAccommodations",
           toolCallId: generateUUID(),
           state: "result",
         },

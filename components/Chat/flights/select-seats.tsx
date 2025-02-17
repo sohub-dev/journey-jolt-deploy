@@ -84,7 +84,11 @@ export function SelectSeats({
         </div>
 
         {availability.seats.map((row, index) => (
-          <div key={`row-${index}`} className="flex flex-row gap-4">
+          <div
+            key={`row-${index}`}
+            data-row={index}
+            className="flex flex-row gap-4"
+          >
             {row.map((seat, seatIndex) => (
               <>
                 {seatIndex === 3 ? (
