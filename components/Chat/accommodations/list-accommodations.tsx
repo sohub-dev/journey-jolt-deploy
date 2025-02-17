@@ -78,7 +78,7 @@ export function ListAccommodations({
     maxSteps: 5,
   });
   return (
-    <div className="w-fit bg-white dark:bg-zinc-900 rounded-lg">
+    <div className="w-fit bg-jjBlack/[0.04] dark:bg-white/[0.04] rounded-lg">
       {results.accommodations.map((accommodation) => (
         <div
           key={accommodation.id}

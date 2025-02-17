@@ -1,7 +1,7 @@
 import { generateUUID } from "@/lib/utils";
 import { Chat } from "@/components/Chat";
 
-const UIFlag = false;
+const UIFlag = true;
 
 export default async function ChatPage() {
   const id = generateUUID();

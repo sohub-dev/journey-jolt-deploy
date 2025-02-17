@@ -107,7 +107,7 @@ export function SelectSeats({
                   className={cn(
                     "cursor-pointer group relative size-8 sm:size-10 flex-shrink-0 flex rounded-sm flex-row items-center justify-center",
                     seat.isAvailable
-                      ? "bg-jjBlue hover:bg-pink-500"
+                      ? "bg-jjBlue hover:bg-green-500"
                       : "bg-gray-500 cursor-not-allowed"
                   )}
                 >
@@ -116,7 +116,7 @@ export function SelectSeats({
                     className={cn(
                       "absolute -top-1 h-2 w-full scale-125 rounded-sm",
                       seat.isAvailable
-                        ? "bg-blue-600 group-hover:bg-pink-600"
+                        ? "bg-blue-600 group-hover:bg-green-600"
                         : "bg-zinc-600 cursor-not-allowed"
                     )}
                   />
