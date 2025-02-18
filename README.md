@@ -15,7 +15,7 @@ JourneyJolt is built with modern and reliable technologies:
 
 ## Getting Started
 
-### Prerequisites
+## Prerequisites
 
 **Required Versions:**
 
@@ -63,7 +63,7 @@ Before running the application, you'll need to set up several services and envir
 > [!IMPORTANT]
 > The `GOOGLE_REDIRECT_URI` must match **exactly** what you configure in the Google Cloud Console, including the protocol (http/https), domain, and path - these are provided above.
 
-### Environment Variables
+## Environment Variables
 
 Copy `.env.example` to `.env` and configure the following variables:
 
@@ -92,7 +92,7 @@ GOOGLE_REDIRECT_URI=                    # Required for Gmail integration
 
 ```
 
-### Running Locally
+## Running Locally
 
 Run the development server:
 
@@ -121,7 +121,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ```
 
-### Authentication Related Routes:
+## Authentication Related Routes:
 
 The authentication system currently provides two main routes for user access:
 
@@ -153,7 +153,7 @@ The signup route handles new user registration.
 - Option to continue with Google Account
 - Link to login page for existing users
 
-### Onboarding Routes
+## Onboarding Routes
 
 The onboarding procedure allows the user to input data necessary for the smooth flow of the app
 
@@ -187,7 +187,7 @@ Displays three different forms for the user to fill
 - Magic Word input field
   (Magic Word will be used to confirm the identity of the user when booking a trip)
 
-### Protected Dashboard Routes
+## Protected Dashboard Routes
 
 The dashboard section provides the main interface for user interactions after authentication. All dashboard routes are protected and require user authentication to access. Each route serves a specific purpose in the user's journey, from booking trips to managing passenger information. All routes are accessible from the sidebar.
 
@@ -293,7 +293,7 @@ The four following tables and their fields are provided and handled by _Better A
   - Nationality
 - Links to user via `userId`
 
-### Booking System Related Tables
+## Booking System Related Tables
 
 #### 1. Booking: `booking`
 
@@ -334,7 +334,7 @@ The four following tables and their fields are provided and handled by _Better A
   - Room details
   - Pricing per night
 
-### Payment System Related Tables
+## Payment System Related Tables
 
 #### 1. Payment Information `payment_info`
 
@@ -345,7 +345,7 @@ The four following tables and their fields are provided and handled by _Better A
   - Magic word authentication
   - Card type and last 4 digits
 
-### Chat Related Tables
+## Chat Related Tables
 
 #### 1. Chat `chat`
 
