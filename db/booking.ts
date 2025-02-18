@@ -332,3 +332,14 @@ export async function getBookings(userId: string) {
     return hasFutureFlights || hasFutureAccommodations;
   }
 }
+
+export async function deleteBookingInfo(bookingId: string): Promise<void> {
+  try {
+    await db.delete(booking).where(eq(booking.id, bookingId));
+    console.log("Successfully deleted passenger info: ", bookingId);
+  } catch (error) {
+    console.error("Error deleting passenger info:", error);
+    throw error;
+  }
+}
+
