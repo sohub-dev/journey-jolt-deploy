@@ -240,11 +240,17 @@ User account and preference management.
 
 _missing_
 
-## Database Schema Documentation
+## Database Schema Documentation and Technical Details
 
 This database schema is designed to support the application with comprehensive user authentication, passenger management,flight and accommodation booking, and payment handling capabilities.
 
 The schema supports various travel-related functionalities including flight bookings, accommodation management, and passenger information storage.
+
+- Uses PostgreSQL as the database system
+- Implements Drizzle ORM for database operations
+- Uses nanoid for ID generation
+- Includes timestamp tracking for all tables
+- Implements proper foreign key constraints
 
 ## Authentication Related Tables:
 
@@ -353,6 +359,8 @@ The four following tables and their fields are provided and handled by _Better A
 - Links messages to users
 - Maintains conversation history
 - Uses JSON for message storage
+
+
 
 ## Future Enhancements
 
