@@ -14,7 +14,7 @@ export default async function TripsPage() {
   }
 
   // const bookings = await getBookings(session.user.id);
-  const {futureBookings} = await getBookings(session.user.id);
-  
-  return <TripsList bookings={futureBookings} />;
+  const { pastBookings } = await getBookings(session.user.id);
+
+  return <TripsList bookings={pastBookings} />;
 }

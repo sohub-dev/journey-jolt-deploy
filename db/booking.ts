@@ -282,9 +282,51 @@ export async function getBookings(userId: string) {
         return acc;
       }, [] as bookingSelectWithFlightAndAccommodation[]);
 
-    return groupedBookings;
+    //return groupedBookings;
+
+    const now = new Date();
+    const { futureBookings, pastBookings } = groupedBookings.reduce(
+      (acc, booking) => {
+        const isInFuture = isFutureBooking(booking, now);
+        if (isInFuture) {
+          acc.futureBookings.push(booking);
+        } else {
+          acc.pastBookings.push(booking);
+        }
+        return acc;
+      },
+      { futureBookings: [], pastBookings: [] } as {
+        futureBookings: bookingSelectWithFlightAndAccommodation[];
+        pastBookings: bookingSelectWithFlightAndAccommodation[];
+      }
+    );
+
+    return {
+      futureBookings,
+      pastBookings,
+    };
   } catch (error) {
     console.error(error);
     throw new Error("Failed to get bookings");
   }
+
+  function isFutureBooking(
+  booking: bookingSelectWithFlightAndAccommodation,
+  now: Date
+): boolean {
+  // Check flights
+  const hasFutureFlights = booking.booking_flights.some((flight) => {
+    return new Date(flight.departureTime) > now;
+  });
+
+  // Check accommodations
+  const hasFutureAccommodations = booking.booking_accommodations.some((accommodation) => {
+    return new Date(accommodation.checkOutDate) > now;
+  });
+
+  // A booking is considered future if either its flights or accommodations are in the future
+  return hasFutureFlights || hasFutureAccommodations;
 }
+}
+
+
