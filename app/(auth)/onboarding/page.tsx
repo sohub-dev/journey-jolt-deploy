@@ -102,7 +102,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-24 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen flex items-center justify-center relative">
       <WarpBackground
         gridColor="var(--warp-border)"
         className="px-44 py-20 border-[1px] border-black/5 dark:border-white/5 rounded-2xl w-full max-w-4xl"

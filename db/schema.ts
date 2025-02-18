@@ -140,6 +140,11 @@ export const booking = pgTable("booking", {
   currency: text("currency").notNull(),
   paymentStatus: text("payment_status").notNull(),
   startingDate: text("starting_date").notNull(),
+  endingDate: text("ending_date").notNull(),
+  originCity: text("origin_city").notNull(),
+  originCountry: text("origin_country").notNull(),
+  destinationCity: text("destination_city").notNull(),
+  destinationCountry: text("destination_country").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

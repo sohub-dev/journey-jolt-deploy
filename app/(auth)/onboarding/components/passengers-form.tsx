@@ -54,7 +54,7 @@ export function PassengersForm({
           duration: 0.8,
           ease: [0.175, 0.885, 0.32, 1],
         }}
-        className="h-full max-h-[40vh] overflow-y-auto flex flex-col gap-6 px-2"
+        className="h-full max-h-[30vh] overflow-y-auto flex flex-col gap-6 px-2"
       >
         {fields.map((field, index) => (
           <div

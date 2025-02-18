@@ -111,7 +111,7 @@ export function MultimodalInput({
                     content: suggestedAction.action,
                   });
                 }}
-                className="border-none bg-jjBlack/[0.04] dark:bg-white/[0.04] w-full text-left border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-2xl p-5 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex flex-col"
+                className="border-none bg-jjBlack/[0.04] dark:bg-white/[0.04] w-full text-left border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-2xl p-5 text-sm hover:bg-jjBlack/[0.08] dark:hover:bg-white/[0.08] transition-colors flex flex-col"
               >
                 <span className="font-medium">{suggestedAction.title}</span>
                 <span className="text-zinc-500 dark:text-zinc-400">

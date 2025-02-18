@@ -42,6 +42,16 @@
   @apply bg-jjBlack dark:bg-white rounded-full;
 }
 
+[data-sidebar="content"]::-webkit-scrollbar,
+.history-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+[data-sidebar="content"]::-webkit-scrollbar-track,
+.history-scrollbar::-webkit-scrollbar-track {
+  @apply bg-[#f5f5f5] dark:bg-[#17191c];
+}
+
 .skeleton {
   * {
     pointer-events: none !important;

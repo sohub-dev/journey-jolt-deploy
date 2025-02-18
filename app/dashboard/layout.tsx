@@ -29,7 +29,7 @@ export default async function DashboardLayout({
     <SidebarProvider>
       <AppSidebar session={session} />
       <SidebarInset className="relative h-svh pr-3 py-3 bg-[#f5f5f5] dark:bg-[#17191c]">
-        <header className="absolute top-3 rounded-t-xl w-[calc(100%-1.5rem)] z-[100] bg-white dark:bg-jjBlack flex h-16 shrink-0 border-b-[1px] border-black/[0.1] dark:border-white/[0.1] items-center justify-between pr-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-14">
+        <header className="absolute top-3 rounded-t-xl w-[calc(100%-1.5rem)] z-[45] bg-white dark:bg-jjBlack flex h-16 shrink-0 border-b-[1px] border-black/[0.1] dark:border-white/[0.1] items-center justify-between pr-4 gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-14">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />

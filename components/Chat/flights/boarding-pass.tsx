@@ -42,7 +42,7 @@ export function DisplayBoardingPass({ boardingPass = SAMPLE }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col items-end gap-0.5">
           <div className="text-black dark:text-white text-sm sm:text-base">
             {boardingPass.arrival.cityName}
           </div>

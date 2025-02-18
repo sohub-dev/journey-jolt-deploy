@@ -2,8 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { User } from "better-auth";
 
@@ -11,13 +11,7 @@ import { Chat } from "@/db/schema";
 import { getTitleFromChat } from "@/lib/utils";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu } from "../ui/sidebar";
 
-import {
-  InfoIcon,
-  MenuIcon,
-  MoreHorizontalIcon,
-  Pencil,
-  TrashIcon,
-} from "lucide-react";
+import { InfoIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,9 +32,9 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+
 export const History = ({ user }: { user: User | undefined }) => {
   const { id } = useParams();
-  const pathname = usePathname();
   const router = useRouter();
 
   const [isHistoryVisible, setIsHistoryVisible] = useState(false);
@@ -90,17 +84,17 @@ export const History = ({ user }: { user: User | undefined }) => {
           History - {history === undefined ? "loading" : history.length} chats
         </SidebarGroupLabel>
 
-        <SidebarMenu className="mt-0 flex flex-col px-0">
+        <SidebarMenu className="mt-0 flex flex-col px-0 h-full max-h-[45vh] overflow-y-auto history-scrollbar">
           <div className="flex flex-col p-0">
             {!user ? (
-              <div className="text-zinc-500 h-dvh w-full flex flex-row justify-center items-center text-sm gap-2">
+              <div className="text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2">
                 <InfoIcon />
                 <div>Login to save and revisit previous chats!</div>
               </div>
             ) : null}
 
             {!isLoading && history?.length === 0 && user ? (
-              <div className="text-zinc-500 h-dvh w-full flex flex-row justify-center items-center text-sm gap-2">
+              <div className="text-zinc-500 mt-32 w-full flex flex-row justify-center items-center text-sm gap-2">
                 <InfoIcon />
                 <div>No chats found</div>
               </div>
@@ -146,8 +140,17 @@ export const History = ({ user }: { user: User | undefined }) => {
                       </span>
                     </Link>
                   </Button>
-
-                  <DropdownMenu modal={true}>
+                  <Button
+                    className="flex flex-row gap-2 items-center justify-start h-fit font-normal p-1.5 rounded-sm hover:bg-red-400/10 dark:hover:bg-red-400/10 hover:text-red-400 dark:hover:text-red-400"
+                    variant="ghost"
+                    onClick={() => {
+                      setDeleteId(chat.id);
+                      setShowDeleteDialog(true);
+                    }}
+                  >
+                    <TrashIcon />
+                  </Button>
+                  {/* <DropdownMenu modal={true}>
                     <DropdownMenuTrigger asChild>
                       <Button
                         className="p-1 h-fit font-normal text-zinc-500 transition-none hover:bg-zinc-200 dark:hover:bg-zinc-700"
@@ -171,7 +174,7 @@ export const History = ({ user }: { user: User | undefined }) => {
                         </Button>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
-                  </DropdownMenu>
+                  </DropdownMenu> */}
                 </div>
               ))}
           </div>
@@ -189,8 +192,11 @@ export const History = ({ user }: { user: User | undefined }) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Continue
+            <AlertDialogAction
+              className="bg-red-400 hover:bg-red-400/70 dark:bg-red-400/90 dark:hover:bg-red-400/70"
+              onClick={handleDelete}
+            >
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -111,7 +111,7 @@ export function SelectSeats({
                       : "bg-gray-500 cursor-not-allowed"
                   )}
                 >
-                  <div className="text-xs text-white">${seat.priceInEuros}</div>
+                  <div className="text-xs text-white">{seat.priceInEuros}€</div>
                   <div
                     className={cn(
                       "absolute -top-1 h-2 w-full scale-125 rounded-sm",

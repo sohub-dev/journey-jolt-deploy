@@ -17,13 +17,17 @@ interface PaymentFormProps {
 export function PaymentForm({ form }: PaymentFormProps) {
   return (
     <div className="space-y-6 w-full">
-      <CardHeader className="pl-2 pb-0 pt-0">
+      <CardHeader className="pl-0 pb-0 pt-0">
         <CardTitle className="font-medium tracking-tight text-2xl p-0">
           Payment Information
         </CardTitle>
         <CardDescription className="text-base text-black/60 dark:text-white/60 tracking-tight">
           Add your payment information that will be <br /> used to pay for your
-          bookings
+          bookings <br />
+          <br />
+          <span className="text-sm">
+            You can use: 5425233430109903 for testing
+          </span>
         </CardDescription>
       </CardHeader>
 

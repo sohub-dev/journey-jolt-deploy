@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
-import { getBookings } from "@/db/booking";
+import { getPastTripsInfo } from "@/db/booking";
 import TripsList from "@/components/Trips/trips-list";
 export default async function TripsPage() {
   const { data: session } = await authClient.getSession({
@@ -14,7 +14,7 @@ export default async function TripsPage() {
   }
 
   // const bookings = await getBookings(session.user.id);
-  const { pastBookings } = await getBookings(session.user.id);
+  const pastBookings = await getPastTripsInfo(session.user.id);
 
-  return <TripsList bookings={pastBookings} />;
+  return <TripsList trips={pastBookings} />;
 }

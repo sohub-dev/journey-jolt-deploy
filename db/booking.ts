@@ -1,13 +1,13 @@
 "use server";
 
 import { db } from "@/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import {
   booking,
   bookingPassenger,
   bookingFlight,
   bookingAccommodation,
-  passengerFlight,
+  passenger,
 } from "@/db/schema";
 import { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
@@ -28,9 +28,17 @@ export type bookingSelectWithFlightAndAccommodation = bookingSelect & {
 export async function createInitialBooking({
   passengers,
   bookingType,
+  destinationCity,
+  destinationCountry,
+  originCity,
+  originCountry,
 }: {
   passengers: string[];
   bookingType: string;
+  destinationCity: string;
+  destinationCountry: string;
+  originCity: string;
+  originCountry: string;
 }) {
   const { data: session } = await authClient.getSession({
     fetchOptions: {
@@ -51,7 +59,12 @@ export async function createInitialBooking({
     totalAmount: "0",
     currency: "EUR",
     paymentStatus: "pending",
-    startingDate: "n/a",
+    startingDate: new Date(8640000000000000).toISOString(),
+    endingDate: new Date(-8640000000000000).toISOString(),
+    originCity,
+    originCountry,
+    destinationCity,
+    destinationCountry,
   };
 
   try {
@@ -126,17 +139,30 @@ export async function createFlightBooking({
     arrivalDateTime,
   };
 
-  //Update the booking type
-  if (initialBooking[0].bookingType === "accommodation") {
-    try {
-      await db
-        .update(booking)
-        .set({ bookingType: "both" })
-        .where(eq(booking.id, bookingId));
-    } catch (error) {
-      console.error(error);
-      throw new Error("Failed to update booking type");
-    }
+  //Update the booking type and starting date
+  const earliestDate = Math.min(
+    new Date(departureDateTime).getTime(),
+    new Date(initialBooking[0].startingDate).getTime()
+  );
+
+  const latestDate = Math.max(
+    new Date(arrivalDateTime).getTime(),
+    new Date(initialBooking[0].endingDate).getTime()
+  );
+
+  try {
+    await db
+      .update(booking)
+      .set({
+        bookingType:
+          initialBooking[0].bookingType === "flight" ? "flight" : "both",
+        startingDate: new Date(earliestDate).toISOString(),
+        endingDate: new Date(latestDate).toISOString(),
+      })
+      .where(eq(booking.id, bookingId));
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to update booking type");
   }
 
   try {
@@ -181,16 +207,31 @@ export async function createAccommodationBooking({
     throw new Error("Booking not found");
   }
 
-  if (initialBooking[0].bookingType === "flight") {
-    try {
-      await db
-        .update(booking)
-        .set({ bookingType: "both" })
-        .where(eq(booking.id, bookingId));
-    } catch (error) {
-      console.error(error);
-      throw new Error("Failed to update booking type");
-    }
+  const earliestDate = Math.min(
+    new Date(checkInDate).getTime(),
+    new Date(initialBooking[0].startingDate).getTime()
+  );
+
+  const latestDate = Math.max(
+    new Date(checkOutDate).getTime(),
+    new Date(initialBooking[0].endingDate).getTime()
+  );
+
+  try {
+    await db
+      .update(booking)
+      .set({
+        bookingType:
+          initialBooking[0].bookingType === "accommodation"
+            ? "accommodation"
+            : "both",
+        startingDate: new Date(earliestDate).toISOString(),
+        endingDate: new Date(latestDate).toISOString(),
+      })
+      .where(eq(booking.id, bookingId));
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to update booking type");
   }
 
   const [
@@ -223,114 +264,96 @@ export async function createAccommodationBooking({
   return bookingId;
 }
 
-export async function getBookings(userId: string) {
+export type TripInfo = {
+  bookingInfo: bookingSelect;
+  bookingFlights: bookingFlightSelect[];
+  bookingAccommodations: bookingAccommodationSelect[];
+  passengerInfo: (typeof passenger.$inferSelect)[];
+};
+
+export async function getTripsInfo(userId: string): Promise<TripInfo[]> {
   try {
-    const bookings = await db
-      .select({
-        id: booking.id,
-        userId: booking.userId,
-        bookingType: booking.bookingType,
-        status: booking.status,
-        totalAmount: booking.totalAmount,
-        currency: booking.currency,
-        paymentStatus: booking.paymentStatus,
-        startingDate: booking.startingDate,
-        createdAt: booking.createdAt,
-        updatedAt: booking.updatedAt,
-        booking_flights: bookingFlight,
-        booking_accommodations: bookingAccommodation,
-      })
+    const bookingInfo = await db
+      .select()
       .from(booking)
-      .leftJoin(bookingFlight, eq(booking.id, bookingFlight.bookingId))
-      .leftJoin(
-        bookingAccommodation,
-        eq(booking.id, bookingAccommodation.bookingId)
-      )
       .where(eq(booking.userId, userId));
 
-    // Group the results by booking to handle multiple flights/accommodations
-    const groupedBookings: bookingSelectWithFlightAndAccommodation[] =
-      bookings.reduce((acc, curr) => {
-        const existingBooking = acc.find((b) => b.id === curr.id);
+    const bookingFlights = await db
+      .select()
+      .from(bookingFlight)
+      .where(
+        inArray(
+          bookingFlight.bookingId,
+          bookingInfo.map((b) => b.id)
+        )
+      );
 
-        if (!existingBooking) {
-          acc.push({
-            ...curr,
-            booking_flights: curr.booking_flights ? [curr.booking_flights] : [],
-            booking_accommodations: curr.booking_accommodations
-              ? [curr.booking_accommodations]
-              : [],
-          });
-        } else {
-          if (
-            curr.booking_flights &&
-            !existingBooking.booking_flights.some(
-              (f) => f.id === curr.booking_flights?.id
-            )
-          ) {
-            existingBooking.booking_flights.push(curr.booking_flights);
-          }
-          if (
-            curr.booking_accommodations &&
-            !existingBooking.booking_accommodations.some(
-              (a) => a.id === curr.booking_accommodations?.id
-            )
-          ) {
-            existingBooking.booking_accommodations.push(
-              curr.booking_accommodations
-            );
-          }
-        }
-        return acc;
-      }, [] as bookingSelectWithFlightAndAccommodation[]);
+    const bookingAccommodations = await db
+      .select()
+      .from(bookingAccommodation)
+      .where(
+        inArray(
+          bookingAccommodation.bookingId,
+          bookingInfo.map((b) => b.id)
+        )
+      );
 
-    //return groupedBookings;
+    const bookingPassengers = await db
+      .select()
+      .from(bookingPassenger)
+      .where(
+        inArray(
+          bookingPassenger.bookingId,
+          bookingInfo.map((b) => b.id)
+        )
+      );
 
-    const now = new Date();
-    const { futureBookings, pastBookings } = groupedBookings.reduce(
-      (acc, booking) => {
-        const isInFuture = isFutureBooking(booking, now);
-        if (isInFuture) {
-          acc.futureBookings.push(booking);
-        } else {
-          acc.pastBookings.push(booking);
-        }
-        return acc;
-      },
-      { futureBookings: [], pastBookings: [] } as {
-        futureBookings: bookingSelectWithFlightAndAccommodation[];
-        pastBookings: bookingSelectWithFlightAndAccommodation[];
-      }
-    );
+    const passengerInfo = await db
+      .select()
+      .from(passenger)
+      .where(
+        inArray(
+          passenger.id,
+          bookingPassengers.map((p) => p.passengerId)
+        )
+      );
 
-    return {
-      futureBookings,
-      pastBookings,
-    };
-  } catch (error) {
-    console.error(error);
-    throw new Error("Failed to get bookings");
-  }
-
-  function isFutureBooking(
-    booking: bookingSelectWithFlightAndAccommodation,
-    now: Date
-  ): boolean {
-    // Check flights
-    const hasFutureFlights = booking.booking_flights.some((flight) => {
-      return new Date(flight.departureDateTime) > now;
+    const groupedBookings = bookingInfo.map((booking) => {
+      return {
+        bookingInfo: booking,
+        bookingFlights: bookingFlights.filter(
+          (f) => f.bookingId === booking.id
+        ),
+        bookingAccommodations: bookingAccommodations.filter(
+          (a) => a.bookingId === booking.id
+        ),
+        passengerInfo: passengerInfo.filter((p) =>
+          bookingPassengers.some((bp) => bp.passengerId === p.id)
+        ),
+      };
     });
 
-    // Check accommodations
-    const hasFutureAccommodations = booking.booking_accommodations.some(
-      (accommodation) => {
-        return new Date(accommodation.checkOutDate) > now;
-      }
-    );
-
-    // A booking is considered future if either its flights or accommodations are in the future
-    return hasFutureFlights || hasFutureAccommodations;
+    return groupedBookings;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to get trip info");
   }
+}
+
+export async function getPastTripsInfo(userId: string): Promise<TripInfo[]> {
+  const tripsInfo = await getTripsInfo(userId);
+  return tripsInfo.filter(
+    (t) => new Date(t.bookingInfo.endingDate) < new Date()
+  );
+}
+
+export async function getUpcomingAndCurrentTripsInfo(
+  userId: string
+): Promise<TripInfo[]> {
+  const tripsInfo = await getTripsInfo(userId);
+  return tripsInfo.filter(
+    (t) => new Date(t.bookingInfo.endingDate) >= new Date()
+  );
 }
 
 export async function deleteBookingInfo(bookingId: string): Promise<void> {
@@ -342,4 +365,3 @@ export async function deleteBookingInfo(bookingId: string): Promise<void> {
     throw error;
   }
 }
-

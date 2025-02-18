@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Trash2, Ellipsis } from "lucide-react";
+import { Trophy, Trash2, Ellipsis, TrashIcon } from "lucide-react";
 import { passengerInfoSelect } from "@/db/passenger";
 import { savePassengerInfo, deletePassengerInfo } from "@/db/passenger";
 import { WarpBackground } from "../warp-background";
@@ -33,6 +33,17 @@ import { X } from "lucide-react";
 import { DateTimePicker } from "../datetime-picker";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "../ui/alert-dialog";
+
 type PassengersFormData = {
   passengers: PassengerData[];
 };
@@ -55,6 +66,9 @@ export default function PassengerList({
   passengers: passengerInfoSelect[];
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
   const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
   const form = useForm<{ passengers: PassengerData[] }>({
@@ -105,114 +119,153 @@ export default function PassengerList({
       year: "numeric",
     });
   }
+
+  const handleDelete = async () => {
+    if (deleteId) {
+      try {
+        await deletePassengerInfo(deleteId);
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setDeleteId(null);
+    setShowDeleteDialog(false);
+  };
+
   return (
-    <WarpBackground
-      gridColor="var(--warp-border)"
-      className="h-full border-[1px] border-black/5 dark:border-white/5 rounded-2xl w-full overflow-hidden flex items-center justify-center"
-    >
-      <div className="w-screen max-w-[70rem] rounded-lg z-10">
-        <div className="mt-16 bg-white dark:bg-jjBlack rounded-2xl overflow-hidden border-[1px] border-jjBlack/10 dark:border-white/10">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200 dark:border-white/10">
-                <th className=" p-4 text-left font-medium">Passenger</th>
-                <th className=" p-4 text-right font-medium">Passport Number</th>
-                <th className=" p-4 text-right font-medium">Date of Birth</th>
-                <th className=" p-4 text-right font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <AnimatePresence>
-                {passengers.map((passenger) => (
-                  <motion.tr
-                    key={passenger.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="group relative cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                  >
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-white/10 overflow-hidden inline-flex items-center justify-center">
-                          <span className="text-gray-700 dark:text-white text-center font-medium">
-                            {`${passenger.firstName.charAt(
-                              0
-                            )}${passenger.lastName.charAt(0)}`}
-                          </span>
+    <>
+      <WarpBackground
+        gridColor="var(--warp-border)"
+        className="h-full border-[1px] border-black/5 dark:border-white/5 rounded-2xl w-full overflow-hidden flex items-center justify-center"
+      >
+        <div className="w-screen max-w-[70rem] rounded-lg z-10">
+          <div className="mt-16 bg-white dark:bg-jjBlack rounded-2xl overflow-hidden border-[1px] border-jjBlack/10 dark:border-white/10">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200 dark:border-white/10">
+                  <th className=" p-4 text-left font-medium">Passenger</th>
+                  <th className=" p-4 text-right font-medium">
+                    Passport Number
+                  </th>
+                  <th className=" p-4 text-right font-medium">Date of Birth</th>
+                  <th className=" p-4 text-right font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <AnimatePresence>
+                  {passengers.map((passenger) => (
+                    <motion.tr
+                      key={passenger.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="group relative cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-white/10 overflow-hidden inline-flex items-center justify-center">
+                            <span className="text-gray-700 dark:text-white text-center font-medium">
+                              {`${passenger.firstName.charAt(
+                                0
+                              )}${passenger.lastName.charAt(0)}`}
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-gray-900 dark:text-white">
+                              {passenger.firstName} {passenger.lastName}
+                            </span>
+                            <span className="text-gray-500 dark:text-white/40 text-xs">
+                              {passenger.nationality} Citizen
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-gray-900 dark:text-white">
-                            {passenger.firstName} {passenger.lastName}
-                          </span>
-                          <span className="text-gray-500 dark:text-white/40 text-xs">
-                            {passenger.nationality} Citizen
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4 text-right">
-                      <span className="text-gray-900 dark:text-white">
-                        {passenger.passportNumber}
-                      </span>
-                    </td>
-                    <td className="p-4 text-right">
-                      <span className="text-gray-900 dark:text-white">
-                        {formatDate(passenger.dateOfBirth)}
-                      </span>
-                    </td>
-                    <td className="text-right p-4">
-                      {/* <div className="inline-flex items-center justify-center group/menu rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                      </td>
+                      <td className="p-4 text-right">
+                        <span className="text-gray-900 dark:text-white">
+                          {passenger.passportNumber}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <span className="text-gray-900 dark:text-white">
+                          {formatDate(passenger.dateOfBirth)}
+                        </span>
+                      </td>
+                      <td className="text-right p-4">
+                        {/* <div className="inline-flex items-center justify-center group/menu rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <Ellipsis className="ml-auto text-gray-400 group-hover/menu:text-gray-600 dark:text-gray-600/[1] dark:group-hover/menu:text-gray-300 transition-colors h-5 w-5" />
                       </div> */}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="inline-flex items-center justify-center hover:bg-gray-100 dark:hover:bg-jjBlue/5 transition-colors"
-                      >
-                        <Ellipsis className="h-5 w-5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          deletePassengerInfo(passenger.id);
-                          router.refresh();
-                        }}
-                        className="inline-flex items-center justify-center hover:bg-red-500 dark:hover:bg-red-500 hover:text-white"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </Button>
-                    </td>
-                  </motion.tr>
-                ))}
-              </AnimatePresence>
-            </tbody>
-          </table>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="inline-flex items-center justify-center hover:bg-gray-100 dark:hover:bg-jjBlue/5 transition-colors"
+                        >
+                          <Ellipsis className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          className="inline-flex flex-row gap-2 items-center justify-center font-normal p-1.5 rounded-sm hover:bg-red-400/10 dark:hover:bg-red-400/10 hover:text-red-400 dark:hover:text-red-400"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setDeleteId(passenger.id);
+                            setShowDeleteDialog(true);
+                          }}
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </Button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center w-full py-6">
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>Add Passenger</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px] bg-white dark:bg-jjBlack">
+                <DialogTitle className="sr-only">Add Passenger</DialogTitle>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <PassengersForm
+                      form={form}
+                      fields={fields}
+                      append={append}
+                      remove={remove}
+                      onSubmitSuccess={() => {
+                        setIsDialogOpen(false);
+                      }}
+                    />
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
-        <div className="flex justify-center w-full py-6">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>Add Passenger</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] bg-white dark:bg-jjBlack">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <PassengersForm
-                    form={form}
-                    fields={fields}
-                    append={append}
-                    remove={remove}
-                    onSubmitSuccess={() => {
-                      setIsDialogOpen(false);
-                    }}
-                  />
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-    </WarpBackground>
+      </WarpBackground>
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              passenger and remove it from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-400 hover:bg-red-400/70 dark:bg-red-400/90 dark:hover:bg-red-400/70"
+              onClick={handleDelete}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 
@@ -341,6 +394,7 @@ export function PassengersForm({
                         value={field.value}
                         onChange={field.onChange}
                         hideTime
+                        modal={true}
                       />
                     </FormControl>
                     <FormMessage />
@@ -358,6 +412,7 @@ export function PassengersForm({
                         value={field.value}
                         onChange={field.onChange}
                         hideTime
+                        modal={true}
                       />
                     </FormControl>
                     <FormMessage />

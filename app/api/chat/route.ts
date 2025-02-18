@@ -53,15 +53,15 @@ export async function POST(req: Request) {
     toolCallStreaming: true,
 
     system: `\n
-      - you help users book flights and accommodations.
+      - you help users book flights and accommodations and plan their trips by recommending activities and attractions at their destination.
       - today's date is ${new Date().toLocaleDateString()}
       - your answers and questions must be concise and to the point.
-      - DO NOT output lists or code blocks.
       - you have to use tools whenever possible.
       - you must not output/display lists of flights, seats, accommodations, etc.
       - ask follow up questions to nudge user into the optimal flow
       - ask questions to get the information you need to book the flights or accommodations
-      - assume the most popular airports for the origin and destination
+      - if the user provides a city or country, assume the most popular airports for the origin and destination
+      - always ask for origin if not provided
       - to search for flights you need:
         - origin
         - destination
@@ -82,6 +82,7 @@ export async function POST(req: Request) {
         - ask necessary questions to get the information you need to book the flights.
         - search for flights separately for each desired flight leg.
         - for each flight leg:
+          - make sure you have the origin, destination, departure date, and passengers.
           - use the 'searchFlights' tool to find flights.
           - ask the user to choose a flight, without outputting a list of flights.
           - use the 'selectSeats' tool to prompt the user for seat selection for each passenger.
@@ -106,6 +107,7 @@ export async function POST(req: Request) {
           - only after payment authorization is complete and you have verified the payment, confirm the booking details.
           - use the 'createAccommodationBooking' tool to create the accommodation booking.
         - only after the booking is created, congratulate the user and say that the booking is complete and some basic details about the booking.
+        - ask the user if they want help planning their trip with a list of activities and attractions at their destination.
     `,
     messages: coreMessages,
     tools: {
@@ -129,11 +131,26 @@ export async function POST(req: Request) {
           bookingType: z
             .string()
             .describe("Type of booking, 'flight' or 'accommodation' or 'both'"),
+          originCity: z.string().describe("City of the origin"),
+          originCountry: z.string().describe("Country of the origin"),
+          destinationCity: z.string().describe("City of the destination"),
+          destinationCountry: z.string().describe("Country of the destination"),
         }),
-        execute: async ({ passengers, bookingType }) => {
+        execute: async ({
+          passengers,
+          bookingType,
+          destinationCity,
+          destinationCountry,
+          originCity,
+          originCountry,
+        }) => {
           const bookingId = await createInitialBooking({
             passengers,
             bookingType,
+            destinationCity,
+            destinationCountry,
+            originCity,
+            originCountry,
           });
           return bookingId;
         },
@@ -192,15 +209,21 @@ export async function POST(req: Request) {
             cityName: z.string().describe("Name of the departure city"),
             airportCode: z.string().describe("Code of the departure airport"),
             timestamp: z.string().describe("ISO 8601 date of departure"),
-            gate: z.string().describe("Departure gate"),
-            terminal: z.string().describe("Departure terminal"),
+            gate: z
+              .string()
+              .describe("Departure gate if not available, use '-'"),
+            terminal: z
+              .string()
+              .describe("Departure terminal if not available, use '-'"),
           }),
           arrival: z.object({
             cityName: z.string().describe("Name of the arrival city"),
             airportCode: z.string().describe("Code of the arrival airport"),
             timestamp: z.string().describe("ISO 8601 date of arrival"),
-            gate: z.string().describe("Arrival gate"),
-            terminal: z.string().describe("Arrival terminal"),
+            gate: z.string().describe("Arrival gate if not available, use '-'"),
+            terminal: z
+              .string()
+              .describe("Arrival terminal if not available, use '-'"),
           }),
           passengerNames: z
             .string()

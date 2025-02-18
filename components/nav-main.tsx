@@ -36,11 +36,11 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup className="mt-4">
-      <SidebarMenuButton asChild>
-        <Link
-          className="bg-jjBlack text-white dark:bg-white dark:text-jjBlack hover:bg-jjBlack/80 dark:hover:bg-white/80 hover:text-white dark:hover:text-jjBlack rounded-lg p-2"
-          href="/dashboard/chat"
-        >
+      <SidebarMenuButton
+        asChild
+        className="bg-jjBlack text-white dark:bg-white dark:text-jjBlack hover:bg-jjBlack/80 dark:hover:bg-white/80 hover:text-white dark:hover:text-jjBlack rounded-lg p-2 transition-all duration-300 ease-out"
+      >
+        <Link className="" href="/dashboard/chat">
           <MessageCircle />
           <span>New Chat</span>
           <Plus className="ml-auto" size={16} strokeWidth={1.5} />

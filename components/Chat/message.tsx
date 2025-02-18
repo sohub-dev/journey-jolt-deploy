@@ -34,7 +34,7 @@ export const Message = ({
   return (
     <motion.div
       className={cn(
-        "flex flex-row gap-4 px-4 w-full md:w-[40%] md:px-0 first-of-type:pt-20",
+        "flex flex-row gap-4 px-4 w-full md:w-[45%] md:px-0 first-of-type:pt-20",
         role === "user" && "justify-end"
       )}
       initial={{ y: 5, opacity: 0 }}
@@ -116,7 +116,7 @@ export const Message = ({
             })}
           </div>
         )}
-        {content && typeof content === "string" && content !== "```" && (
+        {content && typeof content === "string" && (
           <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-1">
             <Markdown>{content}</Markdown>
           </div>

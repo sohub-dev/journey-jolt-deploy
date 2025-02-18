@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
 
 export default async function Page({ params }: { params: any }) {
-  const { id } = params;
+  const { id } = await params;
   const chatFromDb = await getChatById({ id });
 
   if (!chatFromDb) {

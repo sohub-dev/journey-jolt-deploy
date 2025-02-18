@@ -13,6 +13,7 @@ interface WarpBackgroundProps extends HTMLAttributes<HTMLDivElement> {
   beamDelayMin?: number;
   beamDuration?: number;
   gridColor?: string;
+  wrapperClassName?: string;
 }
 
 const Beam = ({
@@ -63,6 +64,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
   beamDelayMin = 0,
   beamDuration = 4,
   gridColor = "hsl(var(--border))",
+  wrapperClassName,
   ...props
 }) => {
   const generateBeams = useCallback(() => {
@@ -156,7 +158,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
           ))}
         </div>
       </div>
-      <div className="relative">{children}</div>
+      <div className={cn("relative", wrapperClassName)}>{children}</div>
     </motion.div>
   );
 };
