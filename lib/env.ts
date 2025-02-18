@@ -16,6 +16,10 @@ export const env = createEnv({
     DUFFEL_TOKEN: z.string().min(1),
     ENCRYPTION_KEY: z.string().min(1),
     GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
+    AI_PROVIDER: z
+      .string()
+      .min(1)
+      .refine((s) => s === "google" || s === "openai"),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1).url(),

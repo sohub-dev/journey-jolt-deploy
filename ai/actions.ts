@@ -5,7 +5,7 @@ import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
 
-const provider: "google" | "openai" = "google";
+const provider: "google" | "openai" = env.AI_PROVIDER;
 
 const duffel = new Duffel({
   token: env.DUFFEL_TOKEN,

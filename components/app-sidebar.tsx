@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 import { History } from "./Chat/history";
+import { Session, User } from "better-auth";
 
 const data = {
   navMain: [
@@ -78,9 +79,15 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: session, isPending } = authClient.useSession();
-
+export function AppSidebar({
+  session,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  session: {
+    user: User;
+    session: Session;
+  };
+}) {
   const user = {
     name: session?.user.name || "",
     email: session?.user.email || "",
@@ -89,15 +96,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   console.log(session);
 
-  if (isPending) {
-    return (
-      <Sidebar collapsible="icon" {...props}>
-        <span className="h-full w-full flex flex-row items-center justify-center group-data-[collapsible=icon]:gap-4 transition-all duration-300 ease-out text-black dark:text-white">
-          <Loader2 className="animate-spin" />
-        </span>
-      </Sidebar>
-    );
-  }
+  // if (isPending) {
+  //   return (
+  //     <Sidebar collapsible="icon" {...props}>
+  //       <span className="h-full w-full flex flex-row items-center justify-center group-data-[collapsible=icon]:gap-4 transition-all duration-300 ease-out text-black dark:text-white">
+  //         <Loader2 className="animate-spin" />
+  //       </span>
+  //     </Sidebar>
+  //   );
+  // }
 
   return (
     <Sidebar collapsible="icon" {...props}>

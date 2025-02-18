@@ -10,16 +10,17 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { passenger } from "@/db/schema";
+import { chat, passenger } from "@/db/schema";
 import {
   createAccommodationBooking,
   createFlightBooking,
   createInitialBooking,
 } from "@/db/booking";
 import { openai } from "@ai-sdk/openai";
-import { saveChat } from "@/db/chats";
+import { deleteChatById, getChatById, saveChat } from "@/db/chats";
+import { env } from "@/lib/env";
 
-const provider: "google" | "openai" = "google";
+const provider: "google" | "openai" = env.AI_PROVIDER;
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -409,4 +410,62 @@ export async function POST(req: Request) {
 
   // Respond with the stream
   return result.toDataStreamResponse();
+}
+
+// export async function DELETE(req: Request) {
+//   const headersList = await headers();
+//   const { data: session } = await authClient.getSession({
+//     fetchOptions: {
+//       headers: headersList,
+//     },
+//   });
+//   if (!session || !session.user || !session.user.id) {
+//     return new Response("Unauthorized", { status: 401 });
+//   }
+
+//   const { id } = await req.json();
+
+//   try {
+//     await db.delete(chat).where(eq(chat.id, id));
+//   } catch (error) {
+//     console.error("Failed to delete chat");
+//     return new Response("Failed to delete chat", { status: 500 });
+//   }
+
+//   return new Response("Chat deleted", { status: 200 });
+// }
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return new Response("Not Found", { status: 404 });
+  }
+
+  const headersList = await headers();
+  const { data: session } = await authClient.getSession({
+    fetchOptions: {
+      headers: headersList,
+    },
+  });
+  if (!session || !session.user || !session.user.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  try {
+    const chat = await getChatById({ id });
+
+    if (chat?.userId !== session.user.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    await deleteChatById({ id });
+
+    return new Response("Chat deleted", { status: 200 });
+  } catch (error) {
+    return new Response("An error occurred while processing your request", {
+      status: 500,
+    });
+  }
 }

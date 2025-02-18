@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, Plus, type LucideIcon } from "lucide-react";
 
 import {
   Collapsible,
@@ -35,14 +35,18 @@ export function NavMain({
   }[];
 }) {
   return (
-    <SidebarGroup>
+    <SidebarGroup className="mt-4">
       <SidebarMenuButton asChild>
-        <Link href="/dashboard/chat">
+        <Link
+          className="bg-jjBlack text-white dark:bg-white dark:text-jjBlack hover:bg-jjBlack/80 dark:hover:bg-white/80 hover:text-white dark:hover:text-jjBlack rounded-lg p-2"
+          href="/dashboard/chat"
+        >
           <MessageCircle />
-          <span>Chat</span>
+          <span>New Chat</span>
+          <Plus className="ml-auto" size={16} strokeWidth={1.5} />
         </Link>
       </SidebarMenuButton>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel className="mt-4">Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

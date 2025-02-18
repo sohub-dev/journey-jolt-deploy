@@ -36,10 +36,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 export const History = ({ user }: { user: User | undefined }) => {
   const { id } = useParams();
   const pathname = usePathname();
+  const router = useRouter();
 
   const [isHistoryVisible, setIsHistoryVisible] = useState(false);
   const { data: history, isLoading } = useQuery({
@@ -74,20 +76,21 @@ export const History = ({ user }: { user: User | undefined }) => {
       error: "Failed to delete chat",
     });
 
+    if (deleteId === id) {
+      router.push("/dashboard/chat");
+    }
+
     setShowDeleteDialog(false);
   };
 
   return (
     <>
-      <SidebarGroup>
-        <SidebarGroupLabel className="text-left flex flex-col items-start text-base font-normal text-white">
-          History
-          <span className="text-left">
-            {history === undefined ? "loading" : history.length} chats
-          </span>
+      <SidebarGroup className="group-data-[collapsible=icon]:hidden mt-4">
+        <SidebarGroupLabel>
+          History - {history === undefined ? "loading" : history.length} chats
         </SidebarGroupLabel>
 
-        <SidebarMenu className="mt-10 flex flex-col px-0">
+        <SidebarMenu className="mt-0 flex flex-col px-0">
           <div className="flex flex-col p-0">
             {!user ? (
               <div className="text-zinc-500 h-dvh w-full flex flex-row justify-center items-center text-sm gap-2">
@@ -120,22 +123,27 @@ export const History = ({ user }: { user: User | undefined }) => {
                 <div
                   key={chat.id}
                   className={cn(
-                    "flex flex-row items-center gap-6 hover:bg-jjBlack/5 dark:hover:bg-white/5 rounded-md pr-1",
+                    "flex flex-row items-center gap-6 hover:bg-jjBlack/5 dark:hover:bg-white/5 rounded-md pr-2",
                     { "bg-zinc-200 dark:bg-zinc-700": chat.id === id }
                   )}
                 >
                   <Button
                     variant="ghost"
                     className={cn(
-                      "justify-between p-0 text-sm font-normal flex flex-row items-center gap-2 pr-2 w-full transition-none"
+                      "justify-between p-0 text-sm font-normal flex flex-row items-center gap-2 pr-2 w-full transition-none hover:bg-transparent dark:hover:bg-transparent"
                     )}
                     asChild
                   >
                     <Link
-                      href={`/chat/${chat.id}`}
-                      className="text-ellipsis overflow-hidden text-left py-2 pl-2 rounded-lg outline-zinc-900"
+                      href={`/dashboard/chat/${chat.id}`}
+                      className="flex flex-col gap-0 h-fit overflow-hidden items-start text-left py-2 pl-2 rounded-lg"
                     >
-                      {getTitleFromChat(chat)}
+                      <span className="w-full text-ellipsis overflow-hidden leading-none">
+                        {getTitleFromChat(chat)}
+                      </span>
+                      <span className="w-full block text-xs text-jjBlack/60 dark:text-white/60">
+                        {format(chat.createdAt, "MMM d, yyyy HH:mm")}
+                      </span>
                     </Link>
                   </Button>
 
