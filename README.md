@@ -121,7 +121,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ```
 
-### Authentication Routes:
+### Authentication Related Routes:
 
 The authentication system currently provides two main routes for user access:
 
@@ -240,6 +240,120 @@ User account and preference management.
 
 _missing_
 
+## Database Schema Documentation
+
+This database schema is designed to support the application with comprehensive user authentication, passenger management,flight and accommodation booking, and payment handling capabilities.
+
+The schema supports various travel-related functionalities including flight bookings, accommodation management, and passenger information storage.
+
+### Authentication Related Tables:
+
+The four following tables and their fields are provided and handled by _Better Auth_ authenticator
+
+#### 1. User `user`
+
+- Primary user account information
+- Tracks email verification and onboarding status
+- Fields:
+  - `id`: Unique identifier
+  - `name`: User's full name
+  - `email`: Unique email address
+  - `emailVerified`: Email verification status
+  - `image`: Profile image URL
+  - `onboarding_complete`: Onboarding status flag _(the only field not provided by Better Auth)_
+
+#### 2. Session `session`
+
+- Manages user sessions and authentication
+- Includes security tracking (IP address, user agent)
+- Linked to user via `userId`
+- Fields include expiration tracking and token management
+
+#### 3. Account `account`
+
+- Handles authentication provider accounts
+- Supports multiple auth methods per user
+- Stores OAuth-related tokens and credentials
+- Links to user via `userId`
+
+#### 4. Verification `verification`
+
+- Manages verification processes
+- Handles time-sensitive verification tokens
+- Used for email verification and password resets
+
+### Travel Information Related Tables:
+
+#### 1. Passenger `passenger`
+
+- Stores passenger information
+- Contains essential travel document details:
+  - Personal information (name, DoB)
+  - Passport details
+  - Nationality
+- Links to user via `userId`
+
+### Booking System Related Tables
+
+#### 1. Booking: `booking`
+
+- Central booking record
+- Types: flight, hotel, or combined
+- Tracks:
+  - Payment status
+  - Total amount
+  - Currency
+  - Booking dates
+  - Overall status
+
+#### 2. Junction Table `booking_passenger`
+
+- Junction table for bookings and passengers
+- Links passengers to bookings
+- Identifies primary passenger
+- Enables multiple passengers per booking
+
+#### 3. Junction Table `booking_flight`
+
+- Junction table for bookings and flights
+- Detailed flight booking information
+- Tracks:
+  - Flight numbers
+  - Airlines
+  - Departure/arrival details
+  - Cabin class
+  - Pricing
+
+#### 4. Junction Table `booking_accommodation`
+
+- Junction table for bookings and accommodations
+- Hotel/accommodation booking details
+- Includes:
+  - Property information
+  - Check-in/out dates
+  - Room details
+  - Pricing per night
+
+### Payment System Related Tables
+
+#### 1. Payment Information `payment_info`
+
+- Secure payment method storage
+- Features:
+  - Encrypted card information
+  - Security measures (IV, token)
+  - Magic word authentication
+  - Card type and last 4 digits
+
+### Chat Related Tables
+
+#### 1. Chat `chat`
+
+- Stores chat interactions
+- Links messages to users
+- Maintains conversation history
+- Uses JSON for message storage
+
 ## Future Enhancements
 
 Planned additions to the authentication system:
@@ -261,4 +375,3 @@ We maintain high security standards across all authentication routes:
 ---
 
 //authentication details -> folder(lib-auth)
-//db how does it work?
