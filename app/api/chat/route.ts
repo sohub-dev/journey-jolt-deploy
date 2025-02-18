@@ -2,11 +2,8 @@ import {
   generateAccommodationSearchResults,
   generateFlightSearchResults,
   generateSampleSeatSelection,
-  getOfferById,
 } from "@/ai/actions";
 import { authClient } from "@/lib/auth-client";
-import { generateUUID } from "@/lib/utils";
-import { openai } from "@ai-sdk/openai";
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 import { headers } from "next/headers";
@@ -45,11 +42,12 @@ export async function POST(req: Request) {
     model: google("gemini-2.0-flash-001"),
     maxSteps: 10,
     maxRetries: 4,
+    toolCallStreaming: true,
     system: `\n
       - you help users book flights and accommodations.
       - today's date is ${new Date().toLocaleDateString()}
       - your answers and questions must be concise and to the point.
-      - DO NOT output lists.
+      - DO NOT output lists or code blocks.
       - you must use tools whenever possible.
       - you must not output/display lists of flights, seats, accommodations, etc.
       - ask follow up questions to nudge user into the optimal flow
@@ -59,7 +57,7 @@ export async function POST(req: Request) {
         - origin
         - destination
         - departure date
-        - number of passengers
+        - passengers
         - cabin class
       - to search for accommodations you need:
         - destination
@@ -77,7 +75,8 @@ export async function POST(req: Request) {
         - for each flight leg:
           - use 'searchFlights' tool to find flights.
           - ask the user to choose a flight, without outputting a list of flights.
-          - use 'selectSeats' tool to prompt the user for seat selection.
+          - use the 'selectSeats' tool to prompt the user for seat selection for each passenger.
+          - wait for the user to select seats for all passengers and make sure they are available.
           - use 'displayReservation' tool without outputting a list of details.
           - ask if he wants to continue to payment or change something.
           - use 'authorizePayment' tool if the user wants to continue to payment.
@@ -139,9 +138,16 @@ export async function POST(req: Request) {
           departureDate: z
             .string()
             .describe("Departure date in ISO 8601 format"),
-          passengers: z.array(z.string()).describe("Passenger IDs"),
+          passengers: z.array(z.string()).describe("All passenger IDs"),
+          type: z.string().describe("Type of booking, 'inbound' or 'outbound'"),
         }),
-        execute: async ({ origin, destination, departureDate, passengers }) => {
+        execute: async ({
+          origin,
+          destination,
+          departureDate,
+          passengers,
+          type,
+        }) => {
           const results = await generateFlightSearchResults({
             origin,
             destination,
@@ -149,7 +155,12 @@ export async function POST(req: Request) {
             passengers,
           });
 
-          return results;
+          const fullResults = {
+            type,
+            flights: results.flights,
+          };
+
+          return fullResults;
         },
       },
       selectSeats: {
@@ -163,7 +174,8 @@ export async function POST(req: Request) {
         },
       },
       displayReservation: {
-        description: "Display pending reservation details",
+        description:
+          "Display pending reservation details for a flight and seats for all passengers",
         parameters: z.object({
           offerId: z.string().describe("Offer ID"),
           seats: z.string().array().describe("Array of selected seat numbers"),
@@ -182,10 +194,15 @@ export async function POST(req: Request) {
             gate: z.string().describe("Arrival gate"),
             terminal: z.string().describe("Arrival terminal"),
           }),
-          passengerName: z.string().describe("Name of the passenger"),
+          passengerNames: z
+            .string()
+            .array()
+            .describe("Array of passenger names"),
           totalPriceInEuros: z
             .number()
-            .describe("Total price in Euros including flight and seat"),
+            .describe(
+              "Total price in Euros including flight and seats for all passengers"
+            ),
         }),
         execute: async (props) => {
           return { ...props };
@@ -248,9 +265,6 @@ export async function POST(req: Request) {
           bookingId: z
             .string()
             .describe("Unique identifier for the booking we initialized"),
-          flightOfferId: z
-            .string()
-            .describe("Unique identifier for the flight offer"),
           cabinClass: z.string().describe("Cabin class"),
           priceAmount: z.string().describe("Price amount"),
           priceCurrency: z.string().describe("Price currency"),
@@ -263,7 +277,6 @@ export async function POST(req: Request) {
         }),
         execute: async ({
           bookingId,
-          flightOfferId,
           cabinClass,
           priceAmount,
           priceCurrency,
@@ -276,7 +289,6 @@ export async function POST(req: Request) {
         }) => {
           const bId = await createFlightBooking({
             bookingId,
-            flightOfferId,
             cabinClass,
             priceAmount,
             priceCurrency,
@@ -320,7 +332,7 @@ export async function POST(req: Request) {
         description: "Create an accommodation booking",
         parameters: z.object({
           bookingId: z.string().describe("Unique identifier for the booking"),
-
+          numberOfRooms: z.number().describe("Number of rooms"),
           pricePerNight: z.string().describe("Price per night"),
           checkInDate: z.string().describe("Check in date in ISO 8601 format"),
           checkOutDate: z
@@ -342,6 +354,7 @@ export async function POST(req: Request) {
           checkOutDate,
           accommodationNameAddressCityCountry,
           accommodationStarRating,
+          numberOfRooms,
         }) => {
           const booking = await createAccommodationBooking({
             bookingId,
@@ -350,83 +363,11 @@ export async function POST(req: Request) {
             checkOutDate,
             accommodationNameAddressCityCountry,
             accommodationStarRating,
+            numberOfRooms,
           });
           return booking;
         },
       },
-      // createBooking: {
-      //   description: "Create the final trip booking",
-      //   parameters: z.object({
-      //     flightOfferId: z
-      //       .string()
-      //       .describe("Unique identifier for the flight offer"),
-      //     accommodationOfferId: z
-      //       .string()
-      //       .describe("Unique identifier for the accommodation offer"),
-      //     passengers: z.array(z.string()).describe("Passenger IDs"),
-      //     bookingType: z
-      //       .string()
-      //       .describe("Type of booking, 'flight' or 'accommodation' or 'both'"),
-      //     flightCost: z.number().describe("Cost of the flight in Euros"),
-
-      //     accommodationName: z.string().describe("Name of the accommodation"),
-      //     accommodationAddress: z
-      //       .string()
-      //       .describe("Address of the accommodation"),
-      //     checkInDate: z.string().describe("Check in date in ISO 8601 format"),
-      //     checkOutDate: z
-      //       .string()
-      //       .describe("Check out date in ISO 8601 format"),
-      //     accommodationCity: z.string().describe("City of the accommodation"),
-      //     accommodationCountry: z
-      //       .string()
-      //       .describe("Country of the accommodation"),
-      //     accommodationPricePerNight: z
-      //       .number()
-      //       .describe("Price per night of the accommodation in Euros"),
-      //     accommodationStarRating: z
-      //       .number()
-      //       .describe("Star rating of the accommodation"),
-      //     totalAmount: z
-      //       .number()
-      //       .describe("Total amount of the booking in Euros"),
-      //   }),
-      //   execute: async ({
-      //     flightOfferId,
-      //     accommodationOfferId,
-      //     passengers,
-      //     bookingType,
-      //     flightCost,
-      //     accommodationName,
-      //     accommodationAddress,
-      //     checkInDate,
-      //     checkOutDate,
-      //     accommodationCity,
-      //     accommodationCountry,
-      //     accommodationPricePerNight,
-      //     accommodationStarRating,
-      //     totalAmount,
-      //   }) => {
-      //     const data = await createBooking({
-      //       flightOfferId,
-      //       accommodationOfferId,
-      //       passengers,
-      //       bookingType,
-      //       flightCost,
-      //       accommodationName,
-      //       accommodationAddress,
-      //       checkInDate,
-      //       checkOutDate,
-      //       accommodationCity,
-      //       accommodationCountry,
-      //       accommodationPricePerNight,
-      //       accommodationStarRating,
-      //       totalAmount,
-      //     });
-
-      //     return data;
-      //   },
-      // },
     },
 
     async onError(error) {

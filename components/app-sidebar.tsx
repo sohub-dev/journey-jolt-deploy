@@ -89,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b-[0px] overflow-hidden border-black/[0.1] dark:border-white/[0.1] transition-all duration-300 ease-out p-4 mt-2 group-data-[collapsible=icon]:p-[calc(1rem-2.5px)]">
+      <SidebarHeader className="border-b-[0px] overflow-hidden border-black/[0.1] dark:border-white/[0.1] transition-all duration-300 ease-out p-4 mt-2 group-data-[collapsible=icon]:p-[calc(1rem-2.5px)] ">
         <span
           data-sidebar="group"
           className="flex flex-row items-center gap-3 w-40 group-data-[collapsible=icon]:gap-4 group-data-[collapsible=icon]:w-36 transition-all duration-300 ease-out text-black dark:text-white"
@@ -122,7 +122,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="pb-3">
         <NavUser user={user} />
       </SidebarFooter>
       {/* <SidebarRail /> */}

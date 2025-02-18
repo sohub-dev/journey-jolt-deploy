@@ -46,3 +46,13 @@ export async function getPassengerInfo(
     throw error;
   }
 }
+
+export async function deletePassengerInfo(passengerId: string): Promise<void> {
+  try {
+    await db.delete(passenger).where(eq(passenger.id, passengerId));
+    console.log("Successfully deleted passenger info: ", passengerId);
+  } catch (error) {
+    console.error("Error deleting passenger info:", error);
+    throw error;
+  }
+}

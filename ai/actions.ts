@@ -70,7 +70,6 @@ export async function generateFlightSearchResults({
       },
     ],
     passengers: passengers.map((passenger) => ({
-      id: passenger,
       type: "adult",
     })),
   });
@@ -79,10 +78,12 @@ export async function generateFlightSearchResults({
   const resultsWithoutDuffelAirways = results.filter(
     (result: any) => !result.airlines.includes("Duffel Airways")
   );
+  console.log(resultsWithoutDuffelAirways);
 
-  const firstSevenResults = resultsWithoutDuffelAirways.slice(0, 7);
+  const limit = 20;
+  const limitedResults = resultsWithoutDuffelAirways.slice(0, limit);
 
-  return { flights: firstSevenResults };
+  return { flights: limitedResults };
 }
 
 function transformFlightData(apiResponse: any) {
@@ -227,7 +228,7 @@ export async function generateSampleSeatSelection({
     schema: z.array(
       z.object({
         seatNumber: z.string().describe("Seat identifier, e.g., 12A, 15C"),
-        priceInUSD: z
+        priceInEuros: z
           .number()
           .describe("Seat price in Euros, less than 100EUR"),
         isAvailable: z

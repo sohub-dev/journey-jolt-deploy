@@ -116,7 +116,7 @@ export const Message = ({
             })}
           </div>
         )}
-        {content && typeof content === "string" && (
+        {content && typeof content === "string" && content !== "```" && (
           <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-1">
             <Markdown>{content}</Markdown>
           </div>

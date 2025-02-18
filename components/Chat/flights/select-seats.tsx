@@ -5,51 +5,51 @@ import { useChat } from "@ai-sdk/react";
 
 interface Seat {
   seatNumber: string;
-  priceInUSD: number;
+  priceInEuros: number;
   isAvailable: boolean;
 }
 
 const SAMPLE: { seats: Seat[][] } = {
   seats: [
     [
-      { seatNumber: "1A", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "1B", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "1C", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "1D", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "1E", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "1F", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "1A", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "1B", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "1C", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "1D", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "1E", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "1F", priceInEuros: 150, isAvailable: false },
     ],
     [
-      { seatNumber: "2A", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "2B", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "2C", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "2D", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "2E", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "2F", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "2A", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "2B", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "2C", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "2D", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "2E", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "2F", priceInEuros: 150, isAvailable: false },
     ],
     [
-      { seatNumber: "3A", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "3B", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "3C", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "3D", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "3E", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "3F", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "3A", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "3B", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "3C", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "3D", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "3E", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "3F", priceInEuros: 150, isAvailable: false },
     ],
     [
-      { seatNumber: "4A", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "4B", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "4C", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "4D", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "4E", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "4F", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "4A", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "4B", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "4C", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "4D", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "4E", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "4F", priceInEuros: 150, isAvailable: false },
     ],
     [
-      { seatNumber: "5A", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "5B", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "5C", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "5D", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "5E", priceInUSD: 150, isAvailable: false },
-      { seatNumber: "5F", priceInUSD: 150, isAvailable: false },
+      { seatNumber: "5A", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "5B", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "5C", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "5D", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "5E", priceInEuros: 150, isAvailable: false },
+      { seatNumber: "5F", priceInEuros: 150, isAvailable: false },
     ],
   ],
 };
@@ -111,7 +111,7 @@ export function SelectSeats({
                       : "bg-gray-500 cursor-not-allowed"
                   )}
                 >
-                  <div className="text-xs text-white">${seat.priceInUSD}</div>
+                  <div className="text-xs text-white">${seat.priceInEuros}</div>
                   <div
                     className={cn(
                       "absolute -top-1 h-2 w-full scale-125 rounded-sm",
