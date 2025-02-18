@@ -58,7 +58,7 @@ export default function TripsList({
                     </td>
                     <td className="p-4 text-center">
                       <span className="text-gray-900 dark:text-white">
-                        {booking.booking_flights[0]?.departureTime || "N/A"}
+                        {booking.booking_flights[0]?.departureDateTime || "N/A"}
                       </span>
                     </td>
                     <td className="p-4 text-right">
