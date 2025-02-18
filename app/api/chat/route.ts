@@ -99,6 +99,7 @@ export async function POST(req: Request) {
           - use 'createAccommodationBooking' tool to create the accommodation booking.
         - only after the booking is created, congratulate the user and say that the booking is complete and some basic details about the booking.
     `,
+
     messages,
     tools: {
       getPassengers: {

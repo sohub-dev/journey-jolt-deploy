@@ -50,7 +50,7 @@ export function AuthorizePayment({
 
       append({
         role: "user",
-        content: "Payment authorized",
+        content: "Finished payment authorization",
       });
     } else {
       toast.error("Invalid magic word");
