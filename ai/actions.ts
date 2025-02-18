@@ -50,10 +50,12 @@ export async function generateFlightSearchResults({
   origin,
   destination,
   departureDate,
+  passengers,
 }: {
   origin: string;
   destination: string;
   departureDate: string;
+  passengers: string[];
 }) {
   const flights = await duffel.offerRequests.create({
     max_connections: 1,
@@ -67,11 +69,10 @@ export async function generateFlightSearchResults({
         departure_time: null,
       },
     ],
-    passengers: [
-      {
-        type: "adult",
-      },
-    ],
+    passengers: passengers.map((passenger) => ({
+      id: passenger,
+      type: "adult",
+    })),
   });
 
   const results = transformFlightData(flights);

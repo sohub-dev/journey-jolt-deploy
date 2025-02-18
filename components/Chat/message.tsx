@@ -16,6 +16,7 @@ import { SelectSeats } from "@/components/Chat/flights/select-seats";
 import { VerifyPayment } from "@/components/Chat/flights/verify-payment";
 import { cn } from "@/lib/utils";
 import { ListAccommodations } from "./accommodations/list-accommodations";
+import { PassengerList } from "./passenger-list";
 
 export const Message = ({
   chatId,
@@ -66,6 +67,8 @@ export const Message = ({
                       <FlightStatus flightStatus={result} />
                     ) : toolName === "searchFlights" ? (
                       <ListFlights chatId={chatId} results={result} />
+                    ) : toolName === "getPassengers" ? (
+                      <PassengerList passengers={result} />
                     ) : toolName === "selectSeats" ? (
                       <SelectSeats chatId={chatId} availability={result} />
                     ) : toolName === "displayReservation" ? (
@@ -94,6 +97,8 @@ export const Message = ({
                       <FlightStatus />
                     ) : toolName === "searchFlights" ? (
                       <ListFlights chatId={chatId} />
+                    ) : toolName === "getPassengers" ? (
+                      <PassengerList />
                     ) : toolName === "selectSeats" ? (
                       <SelectSeats chatId={chatId} />
                     ) : toolName === "displayReservation" ? (
