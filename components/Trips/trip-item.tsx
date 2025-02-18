@@ -4,7 +4,7 @@ import {
 } from "@/db/booking";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, createContext, useContext } from "react";
 import {
   ChevronDown,
   HotelIcon,
@@ -32,6 +32,16 @@ import {
 import { Button } from "../ui/button";
 import { bookingFlight, passenger } from "@/db/schema";
 
+// Context for managing expanded state across all trip items
+const ExpandedContext = createContext<{
+  expandedId: string | null;
+  setExpandedId: (id: string | null) => void;
+}>({
+  expandedId: null,
+  setExpandedId: () => {},
+});
+
+// Helper function to determine the earliest date from flights and accommodations
 function getEarliestOverallDate(flights: any, accommodations: any) {
   // Get earliest flight date if flights exist
   const earliestFlightDate =
@@ -62,8 +72,31 @@ function getEarliestOverallDate(flights: any, accommodations: any) {
   return earliestFlightDate || earliestCheckInDate;
 }
 
-export default function TripItem({ trip }: { trip: TripInfo }) {
+// Wrapper component to provide expanded state context
+export function TripList({ trips }: { trips: TripInfo[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  return (
+    <ExpandedContext.Provider value={{ expandedId, setExpandedId }}>
+      <tbody>
+        {trips.map((trip) => (
+          <TripItem key={trip.bookingInfo.id} trip={trip} />
+        ))}
+      </tbody>
+    </ExpandedContext.Provider>
+  );
+}
+
+export default function TripItem({
+  trip,
+  isExpanded,
+  onToggle,
+}: {
+  trip: TripInfo;
+  isExpanded: boolean;
+  onToggle: () => void;
+}) {
+  const { expandedId, setExpandedId } = useContext(ExpandedContext);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -74,11 +107,13 @@ export default function TripItem({ trip }: { trip: TripInfo }) {
     trip.bookingAccommodations
   );
 
+  // Calculate total price for all flights
   const totalPriceFlights = trip.bookingFlights.reduce(
     (total: number, flight: any) => total + parseFloat(flight.priceAmount),
     0
   );
 
+  // Calculate total price for all accommodations
   const totalPriceAccommodations = trip.bookingAccommodations.reduce(
     (total: number, accommodation: any) => {
       const pricePerNight = parseFloat(accommodation.pricePerNight);
@@ -102,7 +137,7 @@ export default function TripItem({ trip }: { trip: TripInfo }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
-        onClick={() => toggleExpand(trip.bookingInfo.id)}
+        onClick={onToggle}
         className="group relative cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
       >
         <td className="p-4">
@@ -139,7 +174,7 @@ export default function TripItem({ trip }: { trip: TripInfo }) {
         </td>
         <td className="p-4 text-right">
           <button
-            onClick={() => toggleExpand(trip.bookingInfo.id)}
+            onClick={onToggle}
             className="inline-flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
           >
             <motion.div
@@ -153,7 +188,7 @@ export default function TripItem({ trip }: { trip: TripInfo }) {
           </button>
         </td>
       </motion.tr>
-      {expandedId === trip.bookingInfo.id && (
+      {isExpanded && (
         <motion.tr
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}

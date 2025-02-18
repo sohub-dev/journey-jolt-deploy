@@ -11,12 +11,8 @@ import Link from "next/link";
 import TripItem from "./trip-item";
 
 export default function TripsList({ trips }: { trips: TripInfo[] }) {
-  console.log(trips);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const toggleExpand = (id: string) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
   return (
     <WarpBackground
       gridColor="var(--warp-border)"
@@ -53,7 +49,18 @@ export default function TripsList({ trips }: { trips: TripInfo[] }) {
                 </tr>
               )}
               {trips.map((trip) => (
-                <TripItem key={trip.bookingInfo.id} trip={trip} />
+                <TripItem
+                  key={trip.bookingInfo.id}
+                  trip={trip}
+                  isExpanded={expandedId === trip.bookingInfo.id}
+                  onToggle={() =>
+                    setExpandedId(
+                      expandedId === trip.bookingInfo.id
+                        ? null
+                        : trip.bookingInfo.id
+                    )
+                  }
+                />
               ))}
             </AnimatePresence>
           </tbody>
