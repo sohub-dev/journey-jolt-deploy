@@ -80,7 +80,9 @@ export function TripList({ trips }: { trips: TripInfo[] }) {
     <ExpandedContext.Provider value={{ expandedId, setExpandedId }}>
       <tbody>
         {trips.map((trip) => (
-          <TripItem key={trip.bookingInfo.id} trip={trip} />
+          <TripItem key={trip.bookingInfo.id} trip={trip} isExpanded={false} onToggle={function (): void {
+            throw new Error("Function not implemented.");
+          } } />
         ))}
       </tbody>
     </ExpandedContext.Provider>
