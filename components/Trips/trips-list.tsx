@@ -9,6 +9,7 @@ import { DisplayBoardingPass } from "../Chat/flights/boarding-pass";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import TripItem from "./trip-item";
+
 export default function TripsList({ trips }: { trips: TripInfo[] }) {
   console.log(trips);
   const [expandedId, setExpandedId] = useState<string | null>(null);
