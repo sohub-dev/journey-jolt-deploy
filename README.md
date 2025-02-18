@@ -246,7 +246,7 @@ This database schema is designed to support the application with comprehensive u
 
 The schema supports various travel-related functionalities including flight bookings, accommodation management, and passenger information storage.
 
-### Authentication Related Tables:
+## Authentication Related Tables:
 
 The four following tables and their fields are provided and handled by _Better Auth_ authenticator
 
