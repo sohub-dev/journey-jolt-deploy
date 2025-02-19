@@ -27,16 +27,7 @@ export function PassengersForm({
   fields,
   append,
   remove,
-  onSubmitSuccess,
 }: PassengersFormProps) {
-  const handleSubmit = async (data: any) => {
-    // ... existing submission logic ...
-
-    if (onSubmitSuccess) {
-      onSubmitSuccess();
-    }
-  };
-
   return (
     <div className="space-y-6">
       <CardHeader className="pl-2 pb-0 pt-0">

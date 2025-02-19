@@ -119,7 +119,7 @@ export default async function ChatPage() {
     <Chat
       key={id}
       id={id}
-      //@ts-expect-error
+      //@ts-expect-error dont look at this
       initialMessages={UIFlag ? initialMessagesTest : []}
     />
   );

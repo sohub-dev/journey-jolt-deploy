@@ -1,7 +1,7 @@
 "use server";
 
-import { db } from ".";
-import { paymentInfo } from "./schema";
+import { db } from "@/db";
+import { paymentInfo } from "../schema";
 import crypto from "crypto";
 
 type paymentInfoInsertType = typeof paymentInfo.$inferInsert;

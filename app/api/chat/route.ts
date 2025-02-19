@@ -10,14 +10,14 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { chat, passenger } from "@/db/schema";
+import { passenger } from "@/db/schema";
 import {
   createAccommodationBooking,
   createFlightBooking,
   createInitialBooking,
-} from "@/db/booking";
+} from "@/db/services/booking";
 import { openai } from "@ai-sdk/openai";
-import { deleteChatById, getChatById, saveChat } from "@/db/chats";
+import { deleteChatById, getChatById, saveChat } from "@/db/services/chats";
 import { env } from "@/lib/env";
 
 const provider: "google" | "openai" = env.AI_PROVIDER;
@@ -53,10 +53,11 @@ export async function POST(req: Request) {
     toolCallStreaming: true,
 
     system: `\n
-      - you help users book flights and accommodations and plan their trips by recommending activities and attractions at their destination.
+      - you help users book flights and accommodations.
       - today's date is ${new Date().toLocaleDateString()}
       - your answers and questions must be concise and to the point.
       - you have to use tools whenever possible.
+      - DO NOT output lists or code blocks.
       - you must not output/display lists of flights, seats, accommodations, etc.
       - ask follow up questions to nudge user into the optimal flow
       - ask questions to get the information you need to book the flights or accommodations
@@ -254,7 +255,7 @@ export async function POST(req: Request) {
         parameters: z.object({
           offerId: z.string().describe("Unique identifier for the offer"),
         }),
-        execute: async ({ offerId }) => {
+        execute: async () => {
           return { hasCompletedPayment: true };
         },
       },
@@ -425,6 +426,7 @@ export async function POST(req: Request) {
             userId: session.user.id,
           });
         } catch (error) {
+          console.log("error", error);
           console.error("Failed to save chat");
         }
       }
@@ -487,6 +489,7 @@ export async function DELETE(request: Request) {
 
     return new Response("Chat deleted", { status: 200 });
   } catch (error) {
+    console.log("error", error);
     return new Response("An error occurred while processing your request", {
       status: 500,
     });

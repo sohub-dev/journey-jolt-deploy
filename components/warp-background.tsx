@@ -27,7 +27,6 @@ const Beam = ({
   delay: number;
   duration: number;
 }) => {
-  const hue = Math.floor(Math.random() * 360);
   const ar = Math.floor(Math.random() * 10) + 1;
 
   return (
@@ -87,7 +86,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
   const leftBeams = useMemo(() => generateBeams(), [generateBeams]);
 
   return (
-    //@ts-expect-error
+    //@ts-expect-error dont look at this
     <motion.div
       layout
       transition={{

@@ -1,4 +1,4 @@
-import { getChatsByUserId } from "@/db/chats";
+import { getChatsByUserId } from "@/db/services/chats";
 import { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
 

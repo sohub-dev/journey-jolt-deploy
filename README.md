@@ -43,37 +43,17 @@ Before running the application, you'll need to set up several services and envir
   BETTER_AUTH_SECRET=your_secret_key
   ```
 
-3. **Google OAuth Setup (Optional)**
-
-- Go to [Google Cloud Console](https://console.cloud.google.com)
-- Create a new project
-- Enable the Google OAuth2 API
-- Create OAuth 2.0 credentials (Web application type)
-- Add authorized redirect URIs:
-  - `http://localhost:3000/api/auth/google/callback"` (development)
-  - `https://your-production-url/api/auth/google/callback` (production)
-- Add to `.env`:
-
-  ```env
-  GOOGLE_CLIENT_ID=your_client_id
-  GOOGLE_CLIENT_SECRET=your_client_secret
-  GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
-  ```
-
-> [!IMPORTANT]
-> The `GOOGLE_REDIRECT_URI` must match **exactly** what you configure in the Google Cloud Console, including the protocol (http/https), domain, and path - these are provided above.
-
 ## Environment Variables
 
 Copy `.env.example` to `.env` and configure the following variables:
 
 ```env
 # Next.js
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:80
 
 # Auth
 BETTER_AUTH_SECRET=                     # Required: Secret key for authentication
-BETTER_AUTH_URL=http://localhost:3000   # Must match the app url for the authentication process to work properly
+BETTER_AUTH_URL=http://localhost:80   # Must match the app url for the authentication process to work properly
 
 
 # Database
@@ -85,11 +65,6 @@ GOOGLE_GENERATIVE_AI_API_KEY=           # Key to access Google Gemini API
 AI_PROVIDER=                            # Select which AI model will assist, values:{"google", "openAI"}
                                         # Default and Best model is Google's Gemini
 
-# Google OAuth (Optional)
-GOOGLE_CLIENT_ID=                       # Required for Gmail integration
-GOOGLE_CLIENT_SECRET=                   # Required for Gmail integration
-GOOGLE_REDIRECT_URI=                    # Required for Gmail integration
-
 ```
 
 ## Running Locally
@@ -100,7 +75,7 @@ Run the development server:
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:80](http://localhost:80) with your browser to see the result.
 
 ## Page Routing Documentation
 
@@ -138,7 +113,6 @@ The login route handles authentication for existing users.
 - Password input field
 - Submit button
 - "Forgot Password?" link _(TODO)_
-- Option to continue with Google Account
 - Link to signup page for new users
 
 #### 2. Signup `/signup`
@@ -150,7 +124,6 @@ The signup route handles new user registration.
 - Email input field
 - Password input field
 - Submit button
-- Option to continue with Google Account
 - Link to login page for existing users
 
 ## Onboarding Routes
@@ -359,8 +332,6 @@ The four following tables and their fields are provided and handled by _Better A
 - Links messages to users
 - Maintains conversation history
 - Uses JSON for message storage
-
-
 
 ## Future Enhancements
 

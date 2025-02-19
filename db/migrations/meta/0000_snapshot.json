@@ -1,5 +1,5 @@
 {
-  "id": "9343ca6e-26cd-4a6f-ae9f-fd0047c460c0",
+  "id": "fc96cafd-c433-4c98-a2af-e787477b52da",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -125,12 +125,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "booking_reference": {
-          "name": "booking_reference",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "booking_type": {
           "name": "booking_type",
           "type": "text",
@@ -161,8 +155,38 @@
           "primaryKey": false,
           "notNull": true
         },
-        "booking_date": {
-          "name": "booking_date",
+        "starting_date": {
+          "name": "starting_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ending_date": {
+          "name": "ending_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "origin_city": {
+          "name": "origin_city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "origin_country": {
+          "name": "origin_country",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "destination_city": {
+          "name": "destination_city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "destination_country": {
+          "name": "destination_country",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -199,111 +223,13 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "booking_booking_reference_unique": {
-          "name": "booking_booking_reference_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "booking_reference"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.booking_flight": {
-      "name": "booking_flight",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "booking_id": {
-          "name": "booking_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "flight_id": {
-          "name": "flight_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cabin_class": {
-          "name": "cabin_class",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "price_amount": {
-          "name": "price_amount",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "price_currency": {
-          "name": "price_currency",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "booking_flight_booking_id_booking_id_fk": {
-          "name": "booking_flight_booking_id_booking_id_fk",
-          "tableFrom": "booking_flight",
-          "tableTo": "booking",
-          "columnsFrom": [
-            "booking_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "booking_flight_flight_id_flight_id_fk": {
-          "name": "booking_flight_flight_id_flight_id_fk",
-          "tableFrom": "booking_flight",
-          "tableTo": "flight",
-          "columnsFrom": [
-            "flight_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.booking_hotel": {
-      "name": "booking_hotel",
+    "public.booking_accommodation": {
+      "name": "booking_accommodation",
       "schema": "",
       "columns": {
         "id": {
@@ -314,12 +240,6 @@
         },
         "booking_id": {
           "name": "booking_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "hotel_room_id": {
-          "name": "hotel_room_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -401,9 +321,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "booking_hotel_booking_id_booking_id_fk": {
-          "name": "booking_hotel_booking_id_booking_id_fk",
-          "tableFrom": "booking_hotel",
+        "booking_accommodation_booking_id_booking_id_fk": {
+          "name": "booking_accommodation_booking_id_booking_id_fk",
+          "tableFrom": "booking_accommodation",
           "tableTo": "booking",
           "columnsFrom": [
             "booking_id"
@@ -413,13 +333,113 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.booking_flight": {
+      "name": "booking_flight",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
         },
-        "booking_hotel_hotel_room_id_hotel_room_id_fk": {
-          "name": "booking_hotel_hotel_room_id_hotel_room_id_fk",
-          "tableFrom": "booking_hotel",
-          "tableTo": "hotel_room",
+        "booking_id": {
+          "name": "booking_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cabin_class": {
+          "name": "cabin_class",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_amount": {
+          "name": "price_amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_currency": {
+          "name": "price_currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flight_number": {
+          "name": "flight_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "airline": {
+          "name": "airline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departure_airport": {
+          "name": "departure_airport",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "arrival_airport": {
+          "name": "arrival_airport",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departure_date_time": {
+          "name": "departure_date_time",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "arrival_date_time": {
+          "name": "arrival_date_time",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "aircraft_type": {
+          "name": "aircraft_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "booking_flight_booking_id_booking_id_fk": {
+          "name": "booking_flight_booking_id_booking_id_fk",
+          "tableFrom": "booking_flight",
+          "tableTo": "booking",
           "columnsFrom": [
-            "hotel_room_id"
+            "booking_id"
           ],
           "columnsTo": [
             "id"
@@ -512,8 +532,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.flight": {
-      "name": "flight",
+    "public.chat": {
+      "name": "chat",
       "schema": "",
       "columns": {
         "id": {
@@ -522,116 +542,41 @@
           "primaryKey": true,
           "notNull": true
         },
-        "flight_number": {
-          "name": "flight_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "airline": {
-          "name": "airline",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "departure_airport": {
-          "name": "departure_airport",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "arrival_airport": {
-          "name": "arrival_airport",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "departure_time": {
-          "name": "departure_time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "arrival_time": {
-          "name": "arrival_time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "aircraft_type": {
-          "name": "aircraft_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
+        "messages": {
+          "name": "messages",
+          "type": "json",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.hotel_room": {
-      "name": "hotel_room",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "room_type": {
-          "name": "room_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "max_occupancy": {
-          "name": "max_occupancy",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+      "foreignKeys": {
+        "chat_user_id_user_id_fk": {
+          "name": "chat_user_id_user_id_fk",
+          "tableFrom": "chat",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -727,168 +672,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.passenger_flight": {
-      "name": "passenger_flight",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "booking_flight_id": {
-          "name": "booking_flight_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "passenger_id": {
-          "name": "passenger_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "seat_number": {
-          "name": "seat_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "baggage_allowance": {
-          "name": "baggage_allowance",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "passenger_flight_booking_flight_id_booking_flight_id_fk": {
-          "name": "passenger_flight_booking_flight_id_booking_flight_id_fk",
-          "tableFrom": "passenger_flight",
-          "tableTo": "booking_flight",
-          "columnsFrom": [
-            "booking_flight_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "passenger_flight_passenger_id_passenger_id_fk": {
-          "name": "passenger_flight_passenger_id_passenger_id_fk",
-          "tableFrom": "passenger_flight",
-          "tableTo": "passenger",
-          "columnsFrom": [
-            "passenger_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.passenger_room": {
-      "name": "passenger_room",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "booking_hotel_id": {
-          "name": "booking_hotel_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "passenger_id": {
-          "name": "passenger_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "is_primary_guest": {
-          "name": "is_primary_guest",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "passenger_room_booking_hotel_id_booking_hotel_id_fk": {
-          "name": "passenger_room_booking_hotel_id_booking_hotel_id_fk",
-          "tableFrom": "passenger_room",
-          "tableTo": "booking_hotel",
-          "columnsFrom": [
-            "booking_hotel_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "passenger_room_passenger_id_passenger_id_fk": {
-          "name": "passenger_room_passenger_id_passenger_id_fk",
-          "tableFrom": "passenger_room",
-          "tableTo": "passenger",
-          "columnsFrom": [
-            "passenger_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.payment_info": {
       "name": "payment_info",
       "schema": "",
@@ -934,6 +717,12 @@
           "type": "varchar(4)",
           "primaryKey": false,
           "notNull": false
+        },
+        "magic_word": {
+          "name": "magic_word",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -1100,6 +889,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+        },
+        "onboarding_complete": {
+          "name": "onboarding_complete",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

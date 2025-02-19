@@ -1,34 +1,16 @@
 "use client";
 
 import * as React from "react";
-import {
-  Airplay,
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Loader2,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-  TicketsPlane,
-  Users,
-} from "lucide-react";
+import { Settings2, TicketsPlane, Users } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
 import { History } from "./Chat/history";
 import { Session, User } from "better-auth";
 
@@ -96,16 +78,6 @@ export function AppSidebar({
 
   console.log(session);
 
-  // if (isPending) {
-  //   return (
-  //     <Sidebar collapsible="icon" {...props}>
-  //       <span className="h-full w-full flex flex-row items-center justify-center group-data-[collapsible=icon]:gap-4 transition-all duration-300 ease-out text-black dark:text-white">
-  //         <Loader2 className="animate-spin" />
-  //       </span>
-  //     </Sidebar>
-  //   );
-  // }
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="border-b-[0px] overflow-hidden border-black/[0.1] dark:border-white/[0.1] transition-all duration-300 ease-out p-4 mt-2 group-data-[collapsible=icon]:p-[calc(1rem-2.5px)] ">
@@ -145,7 +117,6 @@ export function AppSidebar({
       <SidebarFooter className="pb-3.5">
         <NavUser user={user} />
       </SidebarFooter>
-      {/* <SidebarRail /> */}
     </Sidebar>
   );
 }

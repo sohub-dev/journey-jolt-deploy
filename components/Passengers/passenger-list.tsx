@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Trash2, Ellipsis, TrashIcon } from "lucide-react";
-import { passengerInfoSelect } from "@/db/passenger";
-import { savePassengerInfo, deletePassengerInfo } from "@/db/passenger";
+import { Ellipsis, TrashIcon } from "lucide-react";
+import { passengerInfoSelect } from "@/db/services/passenger";
+import {
+  savePassengerInfo,
+  deletePassengerInfo,
+} from "@/db/services/passenger";
 import { WarpBackground } from "../warp-background";
 import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
@@ -53,7 +55,6 @@ interface PassengersFormProps {
   fields: Record<"id", string>[];
   append: (value: PassengerData) => void;
   remove: (index: number) => void;
-  onSubmitSuccess?: () => void;
 }
 
 const passengersFormSchema = z.object({
@@ -234,9 +235,6 @@ export default function PassengerList({
                       fields={fields}
                       append={append}
                       remove={remove}
-                      onSubmitSuccess={() => {
-                        setIsDialogOpen(false);
-                      }}
                     />
                   </form>
                 </Form>
@@ -274,16 +272,7 @@ export function PassengersForm({
   fields,
   append,
   remove,
-  onSubmitSuccess,
 }: PassengersFormProps) {
-  const handleSubmit = async (data: any) => {
-    // ... existing submission logic ...
-
-    if (onSubmitSuccess) {
-      onSubmitSuccess();
-    }
-  };
-
   return (
     <div className="space-y-6">
       <CardHeader className="pl-2 pb-0 pt-0">

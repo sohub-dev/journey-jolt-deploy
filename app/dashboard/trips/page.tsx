@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
-import { getUpcomingAndCurrentTripsInfo } from "@/db/booking";
+import { getUpcomingAndCurrentTripsInfo } from "@/db/services/booking";
 
 import TripsList from "@/components/Trips/trips-list";
 export default async function TripsPage() {

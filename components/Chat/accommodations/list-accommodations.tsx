@@ -10,7 +10,6 @@ import {
   Utensils,
   CircleParking,
 } from "lucide-react";
-import { format } from "date-fns";
 import { useChat } from "@ai-sdk/react";
 const mockAccommodations = {
   accommodations: [

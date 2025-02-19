@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -15,14 +14,13 @@ import { cn } from "@/lib/utils";
 import { WarpBackground } from "@/components/warp-background";
 import { motion } from "framer-motion";
 import OnboardingSuccess from "./components/onboarding-success";
-import { savePassengerInfo } from "@/db/passenger";
-import { savePaymentInfo } from "@/db/payment";
+import { savePassengerInfo } from "@/db/services/passenger";
+import { savePaymentInfo } from "@/db/services/payment";
 import { useSession } from "@/lib/auth-client";
-import { updateUserOnboardingComplete } from "@/db/onboarding";
+import { updateUserOnboardingComplete } from "@/db/services/onboarding";
 
 export default function OnboardingPage() {
   const { data: session, isPending } = useSession();
-  const router = useRouter();
   const [step, setStep] = useState(1);
 
   const form = useForm<OnboardingData>({

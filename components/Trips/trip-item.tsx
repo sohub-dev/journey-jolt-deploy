@@ -1,7 +1,4 @@
-import {
-  bookingSelectWithFlightAndAccommodation,
-  TripInfo,
-} from "@/db/booking";
+import { TripInfo } from "@/db/services/booking";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { useState, createContext, useContext } from "react";
@@ -12,15 +9,8 @@ import {
   Star,
   PlaneTakeoff,
   PlaneLanding,
-  User,
   MapPin,
   Building2,
-  Heater,
-  WavesLadder,
-  Wifi,
-  Utensils,
-  CircleParking,
-  Dumbbell,
 } from "lucide-react";
 import { DisplayBoardingPass } from "../Chat/flights/boarding-pass";
 import {
@@ -80,9 +70,14 @@ export function TripList({ trips }: { trips: TripInfo[] }) {
     <ExpandedContext.Provider value={{ expandedId, setExpandedId }}>
       <tbody>
         {trips.map((trip) => (
-          <TripItem key={trip.bookingInfo.id} trip={trip} isExpanded={false} onToggle={function (): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TripItem
+            key={trip.bookingInfo.id}
+            trip={trip}
+            isExpanded={false}
+            onToggle={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         ))}
       </tbody>
     </ExpandedContext.Provider>
@@ -98,11 +93,7 @@ export default function TripItem({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
-  const { expandedId, setExpandedId } = useContext(ExpandedContext);
-
-  const toggleExpand = (id: string) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
+  const { expandedId } = useContext(ExpandedContext);
 
   const earliestDate = getEarliestOverallDate(
     trip.bookingFlights,

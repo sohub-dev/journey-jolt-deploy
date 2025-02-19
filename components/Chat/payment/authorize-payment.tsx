@@ -3,11 +3,6 @@
 import { differenceInMinutes } from "date-fns";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-// import useSWR from "swr";
-
-// import { fetcher } from "@/lib/utils";
-
-// import { CheckCircle, InfoIcon } from "../custom/icons";
 import { Input } from "@/components/ui/input";
 import { CheckCircle, Info } from "lucide-react";
 import { useChat } from "@ai-sdk/react";
@@ -32,29 +27,31 @@ export function AuthorizePayment({
   });
   const [reservation, setReservation] = useState(SAMPLE);
   const [input, setInput] = useState("");
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const [magicWord, setMagicWord] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMagicWord = async () => {
       if (!session?.user?.id) return;
-      
+
       try {
-        const response = await fetch(`/api/payment-info?userId=${session.user.id}`);
+        const response = await fetch(
+          `/api/payment-info?userId=${session.user.id}`
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch payment information');
+          throw new Error("Failed to fetch payment information");
         }
         const data = await response.json();
         // Since the API returns an array, we need to get the first item's magic word
         if (data && data.length > 0) {
           setMagicWord(data[0].magicWord);
         } else {
-          setError('No payment information found');
+          setError("No payment information found");
         }
       } catch (error) {
-        console.error('Error fetching magic word:', error);
-        setError('Failed to load payment information');
+        console.error("Error fetching magic word:", error);
+        setError("Failed to load payment information");
       }
     };
 

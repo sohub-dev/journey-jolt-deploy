@@ -1,20 +1,11 @@
 "use client";
 
-import { Attachment, ChatRequestOptions, CreateMessage, Message } from "ai";
+import { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { motion } from "framer-motion";
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useCallback,
-  Dispatch,
-  SetStateAction,
-  ChangeEvent,
-} from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 
-import { ArrowUp, Paperclip, StopCircle } from "lucide-react";
-import { PreviewAttachment } from "./preview-attachment";
+import { ArrowUp, StopCircle } from "lucide-react";
 import useWindowSize from "./use-window-size";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
@@ -32,7 +23,7 @@ const suggestedActions = [
   },
 ];
 
-export function MultimodalInput({
+export function ChatInput({
   input,
   setInput,
   status,

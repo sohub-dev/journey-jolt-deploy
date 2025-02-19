@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
     "start": "next start",
+    "build": "next build ",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -13,13 +13,15 @@
     "db:studio": "drizzle-kit studio",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "docker:clean": "docker-compose down -v"
+    "docker:clean": "docker-compose down -v",
+    "db:migrate:prod": "node --env-file .env ./scripts/drizzle-migrate.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.1.14",
     "@ai-sdk/openai": "^1.1.11",
     "@ai-sdk/react": "^1.1.16",
     "@duffel/api": "^4.2.1",
+    "@electric-sql/pglite": "^0.2.17",
     "@hookform/resolvers": "^4.0.0",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-avatar": "^1.1.3",

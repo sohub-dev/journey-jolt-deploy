@@ -1,7 +1,7 @@
 "use server";
 
-import { db } from ".";
-import { passenger } from "./schema";
+import { db } from "@/db";
+import { passenger } from "../schema";
 import { eq } from "drizzle-orm";
 
 type passengerInfoInsert = typeof passenger.$inferInsert;

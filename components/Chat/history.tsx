@@ -11,7 +11,7 @@ import { Chat } from "@/db/schema";
 import { getTitleFromChat } from "@/lib/utils";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu } from "../ui/sidebar";
 
-import { InfoIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
+import { InfoIcon, TrashIcon } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,12 +23,6 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
@@ -37,7 +31,6 @@ export const History = ({ user }: { user: User | undefined }) => {
   const { id } = useParams();
   const router = useRouter();
 
-  const [isHistoryVisible, setIsHistoryVisible] = useState(false);
   const { data: history, isLoading } = useQuery({
     queryKey: ["history"],
     queryFn: async () => {
@@ -150,31 +143,6 @@ export const History = ({ user }: { user: User | undefined }) => {
                   >
                     <TrashIcon />
                   </Button>
-                  {/* <DropdownMenu modal={true}>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        className="p-1 h-fit font-normal text-zinc-500 transition-none hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                        variant="ghost"
-                      >
-                        <MoreHorizontalIcon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="left" className="z-[60]">
-                      <DropdownMenuItem asChild>
-                        <Button
-                          className="flex flex-row gap-2 items-center justify-start w-full h-fit font-normal p-1.5 rounded-sm"
-                          variant="ghost"
-                          onClick={() => {
-                            setDeleteId(chat.id);
-                            setShowDeleteDialog(true);
-                          }}
-                        >
-                          <TrashIcon />
-                          <div>Delete</div>
-                        </Button>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu> */}
                 </div>
               ))}
           </div>

@@ -1,12 +1,9 @@
 "use client";
 
-import { TripInfo } from "@/db/booking";
+import { TripInfo } from "@/db/services/booking";
 import { WarpBackground } from "../warp-background";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Star, Trash2 } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
-import { DisplayBoardingPass } from "../Chat/flights/boarding-pass";
-import { Button } from "../ui/button";
 import Link from "next/link";
 import TripItem from "./trip-item";
 

@@ -185,22 +185,6 @@ export const bookingFlight = pgTable("booking_flight", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const passengerFlight = pgTable("passenger_flight", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => nanoid()),
-  bookingFlightId: text("booking_flight_id")
-    .notNull()
-    .references(() => bookingFlight.id, { onDelete: "cascade" }),
-  passengerId: text("passenger_id")
-    .notNull()
-    .references(() => passenger.id, { onDelete: "cascade" }),
-  seatNumber: text("seat_number"),
-  baggageAllowance: text("baggage_allowance"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
 export const bookingAccommodation = pgTable("booking_accommodation", {
   id: text("id")
     .primaryKey()

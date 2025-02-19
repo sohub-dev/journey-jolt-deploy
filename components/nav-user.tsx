@@ -25,7 +25,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import Image from "next/image";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
@@ -41,6 +40,11 @@ export function NavUser({
   const { isMobile } = useSidebar();
   const router = useRouter();
 
+  const initials = user.name
+    .split(" ")
+    .map((name) => name[0])
+    .join("");
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -52,7 +56,9 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {initials}
+                </AvatarFallback>
               </Avatar>
               {/* <Image
                 src={user.avatar}

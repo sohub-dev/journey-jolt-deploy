@@ -1,11 +1,10 @@
 "use client";
 
-import { Attachment, ToolInvocation } from "ai";
+import { ToolInvocation } from "ai";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
 import { Markdown } from "./markdown";
-import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
 import { AuthorizePayment } from "@/components/Chat/payment/authorize-payment";
 import { DisplayBoardingPass } from "@/components/Chat/flights/boarding-pass";
@@ -23,13 +22,11 @@ export const Message = ({
   role,
   content,
   toolInvocations,
-  attachments,
 }: {
   chatId: string;
   role: string;
   content: string | ReactNode;
   toolInvocations: Array<ToolInvocation> | undefined;
-  attachments?: Array<Attachment>;
 }) => {
   return (
     <motion.div

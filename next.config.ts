@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
     ],
   },
   reactStrictMode: false,
+  env: {
+    NEXT_PUBLIC_APP_URL: "http://localhost:80",
+  },
 };
 
 export default nextConfig;

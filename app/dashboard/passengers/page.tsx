@@ -1,7 +1,7 @@
 import PassengerList from "@/components/Passengers/passenger-list";
 import { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
-import { getPassengerInfo } from "@/db/passenger";
+import { getPassengerInfo } from "@/db/services/passenger";
 
 export default async function PassengersPage() {
   const { data: session } = await authClient.getSession({

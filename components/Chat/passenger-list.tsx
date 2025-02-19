@@ -1,12 +1,8 @@
 "use client";
 
-import { passengerInfoSelect } from "@/db/passenger";
-import { Button } from "../ui/button";
-import { authClient } from "@/lib/auth-client";
-import { useQuery } from "@tanstack/react-query";
-import { differenceInHours } from "date-fns";
+import { passengerInfoSelect } from "@/db/services/passenger";
 import { cn } from "@/lib/utils";
-import { IdCard, LocateIcon, MapPinHouse } from "lucide-react";
+import { IdCard, MapPinHouse } from "lucide-react";
 
 const sample: passengerInfoSelect[] = [
   {

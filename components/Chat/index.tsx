@@ -6,7 +6,7 @@ import { useChat } from "@ai-sdk/react";
 import { Message as PreviewMessage } from "@/components/Chat/message";
 import { useScrollToBottom } from "@/components/Chat/use-scroll-to-bottom";
 
-import { MultimodalInput } from "@/components/Chat/multimodal-input";
+import { ChatInput } from "@/components/Chat/chat-input";
 import { Overview } from "@/components/Chat/overview";
 
 export function Chat({
@@ -45,7 +45,6 @@ export function Chat({
               chatId={id}
               role={message.role}
               content={message.content}
-              attachments={message.experimental_attachments}
               toolInvocations={message.toolInvocations}
             />
           ))}
@@ -57,7 +56,7 @@ export function Chat({
         </div>
 
         <form className="flex flex-row gap-2 relative items-end w-full md:max-w-[45%] max-w-[calc(100dvw-32px) px-4 md:px-0">
-          <MultimodalInput
+          <ChatInput
             input={input}
             setInput={setInput}
             handleSubmit={handleSubmit}

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { FlashlightIcon, PlaneTakeoffIcon } from "lucide-react";
+import { PlaneTakeoffIcon } from "lucide-react";
 
 const SAMPLE = {
   flightNumber: "DL1",

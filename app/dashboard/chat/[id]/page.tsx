@@ -2,7 +2,7 @@ import { CoreMessage } from "ai";
 import { notFound } from "next/navigation";
 
 import { Chat as PreviewChat } from "@/components/Chat";
-import { getChatById } from "@/db/chats";
+import { getChatById } from "@/db/services/chats";
 import { Chat } from "@/db/schema";
 import { convertToUIMessages } from "@/lib/utils";
 import { headers } from "next/headers";

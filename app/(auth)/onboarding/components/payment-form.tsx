@@ -58,9 +58,9 @@ export function PaymentForm({ form }: PaymentFormProps) {
                   onInput={(e) => {
                     const input = e.target as HTMLInputElement;
                     const inputValue = input.value;
-                    //@ts-expect-error
+                    //@ts-expect-error dont look at this
                     if (e.keyCode == 8 && inputValue.includes("/")) {
-                      //@ts-expect-error
+                      //@ts-expect-error dont look at this
                       e.location = 2;
                     }
                     if (inputValue.length === 2 && !inputValue.includes("/")) {
