@@ -67,7 +67,16 @@ AI_PROVIDER=                            # Select which AI model will assist, val
 
 ```
 
-## Running Locally
+## Running Using Docker
+
+Make sure you have docker installed and running and that `pnpm-lock.yaml` and `.env` files are present in the root directory.
+
+```bash
+docker compose build
+docker compose up -d
+```
+
+<!-- ## Running Locally
 
 Run the development server:
 
@@ -75,7 +84,7 @@ Run the development server:
 pnpm dev
 ```
 
-Open [http://localhost:80](http://localhost:80) with your browser to see the result.
+Open [http://localhost:80](http://localhost:80) with your browser to see the result. -->
 
 ## Page Routing Documentation
 
