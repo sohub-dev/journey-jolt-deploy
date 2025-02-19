@@ -1,14 +1,15 @@
 import { z } from "zod";
 import { Duffel } from "@duffel/api";
-import { env } from "@/lib/env";
 import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
 
-const provider: "google" | "openai" = env.AI_PROVIDER;
+const provider: "google" | "openai" = process.env.AI_PROVIDER as
+  | "google"
+  | "openai";
 
 const duffel = new Duffel({
-  token: env.DUFFEL_TOKEN,
+  token: process.env.DUFFEL_TOKEN as string,
 });
 
 const flightResultSchema = z.object({

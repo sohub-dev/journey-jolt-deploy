@@ -12,7 +12,6 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { env } from "@/lib/env";
 
 export function LoginForm({
   className,

@@ -18,9 +18,10 @@ import {
 } from "@/db/services/booking";
 import { openai } from "@ai-sdk/openai";
 import { deleteChatById, getChatById, saveChat } from "@/db/services/chats";
-import { env } from "@/lib/env";
 
-const provider: "google" | "openai" = env.AI_PROVIDER;
+const provider: "google" | "openai" = process.env.AI_PROVIDER as
+  | "google"
+  | "openai";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
