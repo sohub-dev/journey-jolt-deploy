@@ -8,6 +8,7 @@ export const auth = betterAuth({
     provider: "pg", // or "mysql", "sqlite"
   }),
   trustedOrigins: [
+    process.env.NEXT_PUBLIC_APP_URL as string,
     process.env.BETTER_AUTH_URL as string,
     "http://localhost:3000",
   ],

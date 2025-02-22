@@ -16,9 +16,9 @@ const nextConfig: NextConfig = {
     ],
   },
   reactStrictMode: false,
-  env: {
-    NEXT_PUBLIC_APP_URL: "http://localhost:3000",
-  },
+  // env: {
+  //   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  // },
 };
 
 export default nextConfig;
