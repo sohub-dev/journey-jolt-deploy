@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1
 
-FROM node AS base
+FROM node:22-bullseye AS base
 
 # Install dependencies only when needed
 FROM base AS deps
