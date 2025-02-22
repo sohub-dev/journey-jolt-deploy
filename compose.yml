@@ -10,9 +10,9 @@ services:
     networks:
       - app_network
     environment:
-      - BETTER_AUTH_URL=http://localhost:3000
-      - NEXT_PUBLIC_APP_URL=http://localhost:3000
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/journeyjolt
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - DATABASE_URL=${DATABASE_URL}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - DUFFEL_TOKEN=${DUFFEL_TOKEN}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
@@ -30,7 +30,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: journeyjolt
     ports:
       - 5432:5432
     volumes:

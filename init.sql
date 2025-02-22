@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS journeyjolt;
-
-USE journeyjolt;
-
 CREATE TABLE "account" (
 	"id" text PRIMARY KEY NOT NULL,
 	"account_id" text NOT NULL,
