@@ -9,6 +9,8 @@ services:
       - "3000:3000"
     networks:
       - app_network
+    volumes:
+      - "./etc/resolv.conf:/etc/resolv.conf"
     environment:
       - BETTER_AUTH_URL=${BETTER_AUTH_URL}
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
