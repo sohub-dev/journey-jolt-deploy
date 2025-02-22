@@ -19,16 +19,6 @@ services:
       - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
       - AI_PROVIDER=${AI_PROVIDER}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
-    args:
-      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
-      - DUFFEL_TOKEN=${DUFFEL_TOKEN}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
-      - AI_PROVIDER=${AI_PROVIDER}
-      - BETTER_AUTH_SECRET=http://localhost:3000
-      - BETTER_AUTH_URL=http://localhost:3000
-      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/journeyjolt
     depends_on:
       db:
         condition: service_healthy
