@@ -18,14 +18,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   env: {
     NEXT_PUBLIC_APP_URL: "http://localhost:3000",
-    BETTER_AUTH_URL: "http://localhost:3000",
-    BETTER_AUTH_SECRET: "process.env.BETTER_AUTH_SECRET",
-    DATABASE_URL: "process.env.DATABASE_URL",
-    ENCRYPTION_KEY: "process.env.ENCRYPTION_KEY",
-    DUFFEL_TOKEN: "process.env.DUFFEL_TOKEN",
-    OPENAI_API_KEY: "process.env.OPENAI_API_KEY",
-    GOOGLE_GENERATIVE_AI_API_KEY: "process.env.GOOGLE_GENERATIVE_AI_API_KEY",
-    AI_PROVIDER: "process.env.AI_PROVIDER",
   },
 };
 
